@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MangaDexApp</string>
+    <string name="manga_cover_art_content_description">Cover art</string>
 </resources>
