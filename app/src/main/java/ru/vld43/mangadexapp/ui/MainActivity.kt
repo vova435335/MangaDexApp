@@ -1,16 +1,19 @@
 package ru.vld43.mangadexapp.ui
 
 import android.os.Bundle
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import ru.vld43.mangadexapp.R
 import ru.vld43.mangadexapp.app.App
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
-    private val testTv by lazy { findViewById<TextView>(R.id.test_tv) }
+    private val mangaListRecycler by lazy { findViewById<RecyclerView>(R.id.manga_list_rv) }
+
+    private lateinit var mangaAdapter: MangaAdapter
 
     @Inject
     lateinit var viewModelFactory: MainViewModelFactory
@@ -24,20 +27,18 @@ class MainActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
 
+        initRecycler()
         observeManga()
     }
 
-    private fun observeManga() = viewModel.mangaListState.observe(this, { mangaList ->
-        var result = ""
+    private fun initRecycler() {
+        mangaListRecycler.layoutManager = GridLayoutManager(this, 3)
+        mangaAdapter = MangaAdapter()
+        mangaListRecycler.adapter = mangaAdapter
+    }
 
-        mangaList.map {
-            result += "id: ${it.id}\n\n" +
-                    "title: ${it.title}\n\n" +
-                    "description: ${it.description}\n\n" +
-                    "------------------------------------------------------------------------------\n\n"
-        }
-
-        testTv.text = result
+    private fun observeManga() = viewModel.mangaListState.observe(this, {
+        mangaAdapter.mangaList = it
     })
 
 }
