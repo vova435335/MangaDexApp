@@ -32,9 +32,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initRecycler() {
-        mangaListRecycler.layoutManager = GridLayoutManager(this, 3)
         mangaAdapter = MangaAdapter()
         mangaListRecycler.adapter = mangaAdapter
+        mangaListRecycler.layoutManager = GridLayoutManager(this, 3)
     }
 
     private fun observeManga() = viewModel.mangaListState.observe(this, {

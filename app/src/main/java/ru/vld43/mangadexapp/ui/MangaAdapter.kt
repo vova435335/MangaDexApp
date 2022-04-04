@@ -1,5 +1,6 @@
 package ru.vld43.mangadexapp.ui
 
+import android.media.Image
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,20 +11,29 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import ru.vld43.mangadexapp.R
-import ru.vld43.mangadexapp.domain.models.Manga
+import ru.vld43.mangadexapp.common.Constants.COVER_ART_URL
+import ru.vld43.mangadexapp.domain.models.MangaWithCover
 
-class MangaAdapter : ListAdapter<Manga, MangaAdapter.MangaViewHolder>(MangaItemCallback) {
+class MangaAdapter : ListAdapter<MangaWithCover, MangaAdapter.MangaViewHolder>(MangaItemCallback) {
 
-    object MangaItemCallback : DiffUtil.ItemCallback<Manga>() {
+    private companion object {
+        const val START_TITLE_TRANSFORM_INDEX = 0
+        const val MAX_TITLE_TRANSFORM_SIZE = 20
+        const val ELLIPSIS = "..."
 
-        override fun areItemsTheSame(oldItem: Manga, newItem: Manga): Boolean =
-            oldItem.id == newItem.id
+        const val IMAGE_SIZE = ".256.jpg"
+    }
 
-        override fun areContentsTheSame(oldItem: Manga, newItem: Manga): Boolean =
+    object MangaItemCallback : DiffUtil.ItemCallback<MangaWithCover>() {
+
+        override fun areItemsTheSame(oldItem: MangaWithCover, newItem: MangaWithCover): Boolean =
+            oldItem.manga.id == newItem.manga.id
+
+        override fun areContentsTheSame(oldItem: MangaWithCover, newItem: MangaWithCover): Boolean =
             oldItem == newItem
     }
 
-    var mangaList: List<Manga> = emptyList()
+    var mangaList: List<MangaWithCover> = emptyList()
         set(value) {
             field = value
             submitList(field)
@@ -36,22 +46,27 @@ class MangaAdapter : ListAdapter<Manga, MangaAdapter.MangaViewHolder>(MangaItemC
         )
 
     override fun onBindViewHolder(holder: MangaViewHolder, position: Int) {
-        Picasso.get()
-            .load("https://uploads.mangadex.org/covers/558c2122-7342-4649-85e9-a866727bb2e8/c2cc3ce4-a84c-4036-938f-a8312358505c.jpg.256.jpg")
-            .into(holder.mangaCover)
-
         val itemManga = mangaList[position]
 
-        if (itemManga.title.length > 20) {
-            val incompleteTitle = itemManga.title.substring(
-                0,
-                20
-            ) + "..."
-            holder.mangaTitle.text = incompleteTitle
+        if (itemManga.coverFileName != "") {
+            Picasso.get()
+                .load("$COVER_ART_URL/${itemManga.manga.id}/${itemManga.coverFileName}$IMAGE_SIZE")
+                .into(holder.mangaCover)
         } else {
-            holder.mangaTitle.text = itemManga.title
+            holder.mangaCover.setImageResource(R.drawable.ic_not_cover)
         }
 
+        val title =
+            if (itemManga.manga.title.length > MAX_TITLE_TRANSFORM_SIZE) {
+                itemManga.manga.title.substring(
+                    START_TITLE_TRANSFORM_INDEX,
+                    MAX_TITLE_TRANSFORM_SIZE
+                ) + ELLIPSIS
+            } else {
+                itemManga.manga.title
+            }
+
+        holder.mangaTitle.text = title
     }
 
     override fun getItemCount(): Int = mangaList.size

@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import ru.vld43.mangadexapp.common.Constants
 import ru.vld43.mangadexapp.data.remote.MangaDexApi
 import ru.vld43.mangadexapp.data.remote.deserialize.LocalizedStringDeserializer
-import ru.vld43.mangadexapp.data.remote.dto.LocalizedString
+import ru.vld43.mangadexapp.data.remote.dto.manga.LocalizedString
 import javax.inject.Singleton
 
 @Module
