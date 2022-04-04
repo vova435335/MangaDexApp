@@ -1,6 +1,7 @@
-package ru.vld43.mangadexapp.data.remote.dto
+package ru.vld43.mangadexapp.data.remote.dto.manga
 
 import com.google.gson.annotations.SerializedName
+import ru.vld43.mangadexapp.data.remote.dto.Relationship
 import ru.vld43.mangadexapp.domain.models.Manga
 
 data class MangaDto(
@@ -14,5 +15,8 @@ fun MangaDto.toManga(): Manga =
     Manga(
         id = id ?: "",
         title = attributes?.title?.ru ?: attributes?.title?.en ?: "",
-        description = attributes?.description?.ru ?: attributes?.description?.en ?: ""
+        description = attributes?.description?.ru ?: attributes?.description?.en ?: "",
+        coverId = relationships?.first {
+            it.type == "cover_art"
+        }?.id ?: ""
     )
