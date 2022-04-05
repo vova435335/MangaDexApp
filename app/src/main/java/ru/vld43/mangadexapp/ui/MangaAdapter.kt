@@ -1,6 +1,5 @@
 package ru.vld43.mangadexapp.ui
 
-import android.media.Image
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,18 +10,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import ru.vld43.mangadexapp.R
-import ru.vld43.mangadexapp.common.Constants.COVER_ART_URL
 import ru.vld43.mangadexapp.domain.models.MangaWithCover
 
 class MangaAdapter : ListAdapter<MangaWithCover, MangaAdapter.MangaViewHolder>(MangaItemCallback) {
-
-    private companion object {
-        const val START_TITLE_TRANSFORM_INDEX = 0
-        const val MAX_TITLE_TRANSFORM_SIZE = 20
-        const val ELLIPSIS = "..."
-
-        const val IMAGE_SIZE = ".256.jpg"
-    }
 
     object MangaItemCallback : DiffUtil.ItemCallback<MangaWithCover>() {
 
@@ -48,25 +38,15 @@ class MangaAdapter : ListAdapter<MangaWithCover, MangaAdapter.MangaViewHolder>(M
     override fun onBindViewHolder(holder: MangaViewHolder, position: Int) {
         val itemManga = mangaList[position]
 
-        if (itemManga.coverFileName != "") {
+        if (itemManga.coverUrl != "") {
             Picasso.get()
-                .load("$COVER_ART_URL/${itemManga.manga.id}/${itemManga.coverFileName}$IMAGE_SIZE")
+                .load(itemManga.coverUrl)
                 .into(holder.mangaCover)
         } else {
             holder.mangaCover.setImageResource(R.drawable.ic_not_cover)
         }
 
-        val title =
-            if (itemManga.manga.title.length > MAX_TITLE_TRANSFORM_SIZE) {
-                itemManga.manga.title.substring(
-                    START_TITLE_TRANSFORM_INDEX,
-                    MAX_TITLE_TRANSFORM_SIZE
-                ) + ELLIPSIS
-            } else {
-                itemManga.manga.title
-            }
-
-        holder.mangaTitle.text = title
+        holder.mangaTitle.text = itemManga.manga.title
     }
 
     override fun getItemCount(): Int = mangaList.size
