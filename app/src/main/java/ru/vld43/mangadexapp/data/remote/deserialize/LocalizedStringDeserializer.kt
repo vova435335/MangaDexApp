@@ -3,7 +3,7 @@ package ru.vld43.mangadexapp.data.remote.deserialize
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
-import ru.vld43.mangadexapp.data.remote.dto.LocalizedString
+import ru.vld43.mangadexapp.data.remote.dto.manga.LocalizedString
 import java.lang.reflect.Type
 
 class LocalizedStringDeserializer : JsonDeserializer<LocalizedString> {

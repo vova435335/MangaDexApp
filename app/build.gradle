@@ -17,6 +17,9 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    viewBinding {
+        enabled true
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -61,4 +64,10 @@ dependencies {
     // Dagger
     implementation 'com.google.dagger:dagger:2.38.1'
     kapt 'com.google.dagger:dagger-compiler:2.38.1'
+
+    // Picasso
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
+    // SwipeRefreshLayout
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 }
