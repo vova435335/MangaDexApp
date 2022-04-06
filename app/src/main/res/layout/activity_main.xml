@@ -39,5 +39,8 @@
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
+    <include
+        android:id="@+id/not_fount_layout"
+        layout="@layout/layout_query_error" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

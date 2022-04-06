@@ -1,52 +1,63 @@
 package ru.vld43.mangadexapp.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.snackbar.Snackbar
 import ru.vld43.mangadexapp.R
 import ru.vld43.mangadexapp.app.App
+import ru.vld43.mangadexapp.databinding.ActivityMainBinding
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(R.layout.activity_main) {
+class MainActivity : AppCompatActivity() {
 
     private companion object {
         const val SPAN_COUNT = 3
-    }
-
-    private val mangaListRecycler by lazy { findViewById<RecyclerView>(R.id.manga_list_rv) }
-    private val mangaSwipeRefresh by lazy { findViewById<SwipeRefreshLayout>(R.id.manga_srl) }
-
-    private lateinit var mangaAdapter: MangaAdapter
-
-    private val mangaListObserver = Observer<MangaStateData> {
-        when (it) {
-            MangaStateData.Loading -> {
-                mangaSwipeRefresh.isRefreshing = true
-            }
-            is MangaStateData.Error -> {
-                mangaSwipeRefresh.isRefreshing = false
-            }
-            is MangaStateData.Success -> {
-                mangaSwipeRefresh.isRefreshing = false
-                mangaAdapter.mangaList = it.data
-            }
-        }
     }
 
     @Inject
     lateinit var viewModelFactory: MainViewModelFactory
     private lateinit var viewModel: MainViewModel
 
+    private lateinit var binding: ActivityMainBinding
+
+    private lateinit var mangaAdapter: MangaAdapter
+
+    private val mangaListObserver = Observer<MangaStateData> {
+        when (it) {
+            MangaStateData.Loading -> {
+                binding.mangaSrl.isRefreshing = true
+                binding.notFountLayout.root.isVisible = false
+            }
+            is MangaStateData.Error -> {
+                mangaAdapter.mangaList = emptyList()
+                binding.mangaSrl.isRefreshing = false
+                binding.notFountLayout.root.isVisible = true
+
+                binding.notFountLayout.queryErrorTv.text = getString(R.string.query_error)
+                showSnackBar(getString(R.string.connection_error))
+            }
+            is MangaStateData.Success -> {
+                binding.notFountLayout.root.isVisible = false
+                binding.mangaSrl.isRefreshing = false
+
+                mangaAdapter.mangaList = it.data
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         App.appComponent.inject(this)
 
+        binding = ActivityMainBinding.inflate(layoutInflater)
         viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
+        setContentView(binding.root)
 
         initViews()
         initRecycler()
@@ -56,8 +67,8 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
     private fun initRecycler() {
         mangaAdapter = MangaAdapter()
-        mangaListRecycler.adapter = mangaAdapter
-        mangaListRecycler.layoutManager = GridLayoutManager(this, SPAN_COUNT)
+        binding.mangaListRv.adapter = mangaAdapter
+        binding.mangaListRv.layoutManager = GridLayoutManager(this, SPAN_COUNT)
     }
 
     private fun initData() {
@@ -69,9 +80,12 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     }
 
     private fun initViews() {
-        mangaSwipeRefresh.setOnRefreshListener {
+        binding.mangaSrl.setOnRefreshListener {
             initData()
         }
     }
+
+    private fun showSnackBar(string: String) =
+        Snackbar.make(binding.root, string, Snackbar.LENGTH_SHORT).show()
 
 }
