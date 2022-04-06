@@ -18,10 +18,6 @@ class MainViewModel(
 
     private var mangaListDisposable = Disposables.disposed()
 
-    init {
-        loadManga()
-    }
-
     override fun onCleared() {
         super.onCleared()
         mangaListDisposable.dispose()
