@@ -1,9 +1,9 @@
 package ru.vld43.mangadexapp.domain.repository
 
-import io.reactivex.Single
+import io.reactivex.Observable
 import ru.vld43.mangadexapp.domain.models.MangaWithCover
 
 interface MangaRepository {
 
-    fun getMangaList(): Single<List<MangaWithCover>>
+    fun getMangaList(): Observable<List<MangaWithCover>>
 }
