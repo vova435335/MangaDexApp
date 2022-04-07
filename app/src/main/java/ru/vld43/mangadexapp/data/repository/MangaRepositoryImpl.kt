@@ -1,7 +1,6 @@
 package ru.vld43.mangadexapp.data.repository
 
 import io.reactivex.Observable
-import io.reactivex.Single
 import ru.vld43.mangadexapp.data.remote.MangaDexApi
 import ru.vld43.mangadexapp.data.remote.dto.manga.toManga
 import ru.vld43.mangadexapp.domain.models.MangaWithCover
