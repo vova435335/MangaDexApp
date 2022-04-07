@@ -37,6 +37,26 @@ class MangaRepositoryImpl @Inject constructor(
             .toList()
             .toObservable()
 
+    override fun searchManga(title: String): Observable<List<MangaWithCover>> =
+        mangaDexApi.searchManga(title).map { mangaListDto ->
+            mangaListDto.mangaList?.map { mangaDto ->
+                mangaDto.toManga()
+            } ?: emptyList()
+        }
+            .flatMapIterable { it }
+            .concatMap { manga ->
+                mangaDexApi.getCoverArt(manga.id)
+                    .map {
+                        MangaWithCover(
+                            manga,
+                            createUrl(manga, it.data?.attributes?.fileName ?: "")
+                        )
+                    }
+            }
+            .toList()
+            .toObservable()
+
+
     private fun createUrl(manga: Manga, fileName: String): String =
         "$COVER_ART_URL/${manga.id}/$fileName$IMAGE_SIZE"
 }
