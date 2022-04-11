@@ -16,7 +16,7 @@ interface MangaDexApi {
 
     @GET(GET_MANGA_LIST)
     fun getMangaList(
-        @Query(QUERY_LIMIT_KEY_PARAMETER) query: Int = 21,
+        @Query(QUERY_LIMIT_KEY_PARAMETER) limit: Int = 21,
     ): Observable<MangaListDto>
 
     @GET(GET_COVER_ART)

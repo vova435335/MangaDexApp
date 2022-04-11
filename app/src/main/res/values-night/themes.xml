@@ -12,13 +12,5 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
-
-        <item name="searchViewStyle">@style/SearchViewDarkColors</item>
-    </style>
-
-    <style name="SearchViewDarkColors" parent="Widget.AppCompat.SearchView">
-        <item name="android:background">@drawable/shape_search_view_background</item>
-        <item name="closeIcon">@drawable/ic_close</item>
-        <item name="searchIcon">@drawable/ic_search</item>
     </style>
 </resources>

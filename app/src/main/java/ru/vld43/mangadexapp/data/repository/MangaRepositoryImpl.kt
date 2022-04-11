@@ -44,7 +44,7 @@ class MangaRepositoryImpl @Inject constructor(
         }
             .flatMapIterable { it }
             .concatMap { manga ->
-                mangaDexApi.getCoverArt(manga.id)
+                mangaDexApi.getCoverArt(manga.coverId)
                     .map {
                         MangaWithCover(
                             manga,
