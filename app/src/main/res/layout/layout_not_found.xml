@@ -8,28 +8,28 @@
     app:layout_constraintTop_toBottomOf="@+id/manga_sv">
 
     <ImageView
-        android:id="@+id/query_error_alert_iv"
+        android:id="@+id/not_found_iv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/alert_image_description"
-        android:src="@drawable/ic_alert"
+        android:src="@drawable/ic_search_off"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/query_error_tv"
+        android:id="@+id/not_found_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:paddingHorizontal="34dp"
-        android:text="@string/query_error"
+        android:text="@string/not_found"
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/query_error_alert_iv" />
+        app:layout_constraintTop_toBottomOf="@+id/not_found_iv" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

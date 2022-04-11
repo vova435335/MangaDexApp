@@ -7,7 +7,6 @@ data class MangaAttributes(
     @SerializedName("altTitles") val altTitles: List<LocalizedString>?,
     @SerializedName("description") val description: LocalizedString?,
     @SerializedName("isLocked") val isLocked: Boolean?,
-    @SerializedName("links") val links: Links?,
     @SerializedName("originalLanguage") val originalLanguage: String?,
     @SerializedName("lastVolume") val lastVolume: String?,
     @SerializedName("lastChapter") val lastChapter: String?,

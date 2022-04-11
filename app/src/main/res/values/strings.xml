@@ -4,4 +4,7 @@
 
     <string name="query_error">Нам не удалось обработать ваш запрос. Попробуйте ещё раз</string>
     <string name="connection_error">Проверьте соединение с интернетом и попробуйте ещё раз</string>
+    <string name="not_found">Ничего не найдено</string>
+    <string name="search_hint">Search by manga name</string>
+    <string name="alert_image_description">alert image</string>
 </resources>

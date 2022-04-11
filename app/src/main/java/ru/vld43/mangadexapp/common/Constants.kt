@@ -10,4 +10,7 @@ object Constants {
 
     const val GET_COVER_ART = "/cover/{id}"
 
+    const val SEARCH_MANGA = "/manga"
+    const val QUERY_SEARCH_KEY_PARAMETER = "title"
+
 }

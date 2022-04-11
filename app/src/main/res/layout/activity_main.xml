@@ -4,8 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.MainActivity">
+    tools:context=".ui.MainActivity"
+    android:background="@color/white">
 
+    <SearchView
+        android:id="@+id/manga_sv"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/shape_search_view_background"
+        android:closeIcon="@drawable/ic_close"
+        android:queryBackground="@android:color/transparent"
+        android:searchIcon="@drawable/ic_search"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:iconifiedByDefault="false"
+        app:showAsAction="always"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:queryHint="@string/search_hint" >
+    </SearchView>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/manga_srl"
@@ -14,7 +32,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/manga_sv">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -22,6 +40,8 @@
             android:orientation="vertical">
 
             <androidx.recyclerview.widget.RecyclerView
+                android:layout_marginTop="8dp"
+                android:clipToPadding="false"
                 android:id="@+id/manga_list_rv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -40,7 +60,11 @@
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <include
-        android:id="@+id/not_fount_layout"
+        android:id="@+id/query_error_layout"
         layout="@layout/layout_query_error" />
+
+    <include
+        android:id="@+id/not_found_layout"
+        layout="@layout/layout_not_found" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
