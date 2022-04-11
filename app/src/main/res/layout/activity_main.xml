@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.MainActivity">
+    tools:context=".ui.MainActivity"
+    android:background="@color/white">
 
     <SearchView
         android:id="@+id/manga_sv"
@@ -21,13 +22,13 @@
         app:showAsAction="always"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:queryHint="@string/search_hint" />
+        app:queryHint="@string/search_hint" >
+    </SearchView>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/manga_srl"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -39,6 +40,8 @@
             android:orientation="vertical">
 
             <androidx.recyclerview.widget.RecyclerView
+                android:layout_marginTop="8dp"
+                android:clipToPadding="false"
                 android:id="@+id/manga_list_rv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

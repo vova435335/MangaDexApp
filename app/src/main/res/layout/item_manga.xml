@@ -23,6 +23,7 @@
             tools:src="@tools:sample/avatars" />
 
         <TextView
+            android:background="@color/white"
             android:id="@+id/manga_title_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
