@@ -40,7 +40,10 @@ class MainActivity : AppCompatActivity() {
             }
             is MangaStateData.Error -> {
                 mangaAdapter.mangaList = emptyList()
+
                 binding.mangaSrl.isRefreshing = false
+
+                binding.notFoundLayout.root.isVisible = false
                 binding.queryErrorLayout.root.isVisible = true
 
                 showSnackBar(getString(R.string.connection_error))
@@ -118,7 +121,11 @@ class MainActivity : AppCompatActivity() {
         }
             .debounce(300, TimeUnit.MILLISECONDS)
             .subscribe {
-                viewModel.searchManga(it)
+                if(it == "") {
+                    viewModel.loadManga()
+                } else {
+                    viewModel.searchManga(it)
+                }
             }
 
     private fun showSnackBar(string: String) =
