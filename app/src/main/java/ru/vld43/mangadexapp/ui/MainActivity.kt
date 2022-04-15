@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity() {
 
     private companion object {
         const val SPAN_COUNT = 3
+        const val SEARCH_DELAY = 300
     }
 
     @Inject
@@ -119,13 +120,9 @@ class MainActivity : AppCompatActivity() {
                 }
             })
         }
-            .debounce(300, TimeUnit.MILLISECONDS)
+            .debounce(SEARCH_DELAY.toLong(), TimeUnit.MILLISECONDS)
             .subscribe {
-                if(it == "") {
-                    viewModel.loadManga()
-                } else {
-                    viewModel.searchManga(it)
-                }
+                viewModel.searchManga(it)
             }
 
     private fun showSnackBar(string: String) =

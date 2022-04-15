@@ -1,11 +1,9 @@
 package ru.vld43.mangadexapp.ui
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposables
 import ru.vld43.mangadexapp.common.extensions.applySchedulers
 import ru.vld43.mangadexapp.domain.use_case.GetMangaListUseCase
 import ru.vld43.mangadexapp.domain.use_case.SearchMangaUseCase
@@ -15,10 +13,10 @@ class MainViewModel(
     private val searchMangaUseCase: SearchMangaUseCase,
 ) : ViewModel() {
 
-    private val mangaListMutable = MutableLiveData<MangaStateData>()
-
     val mangaList: LiveData<MangaStateData>
         get() = mangaListMutable
+
+    private val mangaListMutable = MutableLiveData<MangaStateData>()
 
     private var disposables = CompositeDisposable()
 
@@ -51,8 +49,11 @@ class MainViewModel(
                 mangaListMutable.postValue(MangaStateData.Error("${it.message}"))
             }
             .subscribe { mangaList ->
-                mangaListMutable.postValue(MangaStateData.Success(mangaList))
+                if (title.isEmpty()) {
+                    loadManga()
+                } else {
+                    mangaListMutable.postValue(MangaStateData.Success(mangaList))
+                }
             })
     }
-
 }
