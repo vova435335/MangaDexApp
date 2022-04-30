@@ -10,7 +10,7 @@ import ru.vld43.mangadexapp.domain.models.MangaWithCover
 import ru.vld43.mangadexapp.domain.use_case.GetMangaListUseCase
 import ru.vld43.mangadexapp.domain.use_case.SearchMangaUseCase
 
-class MainViewModel(
+class MainViewModel2(
     private val getMangaListUseCase: GetMangaListUseCase,
     private val searchMangaUseCase: SearchMangaUseCase,
 ) : ViewModel() {
