@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import io.reactivex.Observable
@@ -33,30 +33,6 @@ class MainActivity : AppCompatActivity() {
 
     private val disposables = CompositeDisposable()
 
-    private val mangaListObserver = Observer<MangaStateData> {
-        when (it) {
-            MangaStateData.Loading -> {
-                binding.mangaSrl.isRefreshing = true
-                binding.queryErrorLayout.root.isVisible = false
-            }
-            is MangaStateData.Error -> {
-                binding.mangaSrl.isRefreshing = false
-
-                binding.notFoundLayout.root.isVisible = false
-                binding.queryErrorLayout.root.isVisible = true
-
-                showSnackBar(getString(R.string.connection_error))
-            }
-            is MangaStateData.Success -> {
-                binding.queryErrorLayout.root.isVisible = false
-                binding.mangaSrl.isRefreshing = false
-
-                binding.notFoundLayout.root.isVisible = false
-                mangaAdapter.submitData(lifecycle, it.data)
-            }
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -82,6 +58,30 @@ class MainActivity : AppCompatActivity() {
         mangaAdapter = MangaAdapter()
         binding.mangaListRv.adapter = mangaAdapter
         binding.mangaListRv.layoutManager = GridLayoutManager(this, SPAN_COUNT)
+        mangaAdapter.addLoadStateListener {
+
+            when (it.refresh) {
+                LoadState.Loading -> {
+                    binding.mangaSrl.isRefreshing = true
+                    binding.queryErrorLayout.root.isVisible = false
+                }
+                is LoadState.Error -> {
+                    binding.mangaSrl.isRefreshing = false
+
+                    binding.notFoundLayout.root.isVisible = false
+                    binding.queryErrorLayout.root.isVisible = true
+
+                    showSnackBar(getString(R.string.connection_error))
+                }
+                is LoadState.NotLoading -> {
+                    binding.queryErrorLayout.root.isVisible = false
+                    binding.mangaSrl.isRefreshing = false
+
+                    binding.notFoundLayout.root.isVisible = false
+                    binding.mangaListRv.scrollToPosition(0)
+                }
+            }
+        }
     }
 
     private fun initData() {
@@ -93,13 +93,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel() {
-        viewModel.mangaList.observe(this, mangaListObserver)
+        viewModel.mangaList.observe(this) {
+            mangaAdapter.submitData(lifecycle, it)
+        }
     }
 
     private fun initViews() {
         binding.mangaSrl.setOnRefreshListener {
             mangaAdapter.refresh()
         }
+
     }
 
     private fun initSearchView() =

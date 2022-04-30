@@ -23,7 +23,7 @@ class MangaRepositoryImpl @Inject constructor(
 
     private companion object {
         const val IMAGE_SIZE = ".256.jpg"
-        const val PAGE_SIZE = 6
+        const val PAGE_SIZE = 15
     }
 
     override fun getPagingMangaList(): Observable<PagingData<MangaWithCover>> {
@@ -37,7 +37,7 @@ class MangaRepositoryImpl @Inject constructor(
                 pageSize = PAGE_SIZE,
                 enablePlaceholders = false
             ),
-            pagingSourceFactory = { MangaPagingSource(loader, PAGE_SIZE) }
+            pagingSourceFactory = { MangaPagingSource(loader) }
         ).observable
     }
 
@@ -48,6 +48,7 @@ class MangaRepositoryImpl @Inject constructor(
                 pageSize = pageSize,
                 pageIndex = pageIndex
             )
+                .subscribeOn(Schedulers.io())
         }
 
         return Pager(
@@ -55,7 +56,7 @@ class MangaRepositoryImpl @Inject constructor(
                 pageSize = PAGE_SIZE,
                 enablePlaceholders = false
             ),
-            pagingSourceFactory = { MangaPagingSource(loader, PAGE_SIZE) }
+            pagingSourceFactory = { MangaPagingSource(loader) }
         ).observable
     }
 

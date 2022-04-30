@@ -10,7 +10,6 @@ typealias MangaListPagerLoader = (pageSize: Int, pageIndex: Int) -> Single<List<
 
 class MangaPagingSource @Inject constructor(
     private val loader: MangaListPagerLoader,
-    private val pageSize: Int,
 ) : RxPagingSource<Int, MangaWithCover>() {
 
     override fun loadSingle(params: LoadParams<Int>): Single<LoadResult<Int, MangaWithCover>> {
@@ -20,8 +19,7 @@ class MangaPagingSource @Inject constructor(
             LoadResult.Page(
                     data = it,
                     prevKey = if (pageIndex == 0) null else pageIndex - 1,
-                    nextKey = if (it.size == params.loadSize)
-                        pageIndex + (params.loadSize / pageSize) else null
+                    nextKey = if (it.size == params.loadSize) null else pageIndex + 1
                 )
         }
     }
