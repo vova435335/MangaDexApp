@@ -1,4 +1,4 @@
-package ru.vld43.mangadexapp.ui
+package ru.vld43.mangadexapp.ui.main.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,7 +10,8 @@ import ru.vld43.mangadexapp.R
 import ru.vld43.mangadexapp.databinding.ItemMangaBinding
 import ru.vld43.mangadexapp.domain.models.MangaWithCover
 
-class MangaAdapter : PagingDataAdapter<MangaWithCover, MangaAdapter.MangaViewHolder>(MangaItemCallback) {
+class MangaAdapter : PagingDataAdapter<MangaWithCover, MangaAdapter.MangaViewHolder>(
+    MangaItemCallback) {
 
     object MangaItemCallback : DiffUtil.ItemCallback<MangaWithCover>() {
 
