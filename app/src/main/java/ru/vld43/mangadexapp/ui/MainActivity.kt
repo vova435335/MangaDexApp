@@ -40,8 +40,6 @@ class MainActivity : AppCompatActivity() {
                 binding.queryErrorLayout.root.isVisible = false
             }
             is MangaStateData.Error -> {
-                mangaAdapter.mangaList = emptyList()
-
                 binding.mangaSrl.isRefreshing = false
 
                 binding.notFoundLayout.root.isVisible = false
@@ -53,13 +51,8 @@ class MainActivity : AppCompatActivity() {
                 binding.queryErrorLayout.root.isVisible = false
                 binding.mangaSrl.isRefreshing = false
 
-                if (it.data.isEmpty()) {
-                    binding.notFoundLayout.root.isVisible = true
-                    mangaAdapter.mangaList = emptyList()
-                } else {
-                    binding.notFoundLayout.root.isVisible = false
-                    mangaAdapter.mangaList = it.data
-                }
+                binding.notFoundLayout.root.isVisible = false
+                mangaAdapter.submitData(lifecycle, it.data)
             }
         }
     }
@@ -105,7 +98,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initViews() {
         binding.mangaSrl.setOnRefreshListener {
-            initData()
+            mangaAdapter.refresh()
         }
     }
 

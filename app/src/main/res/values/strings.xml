@@ -7,4 +7,6 @@
     <string name="not_found">Ничего не найдено</string>
     <string name="search_hint">Search by manga name</string>
     <string name="alert_image_description">alert image</string>
+    <string name="paging_message_error">Oops, can\'t load data</string>
+    <string name="try_again_button">Try Again</string>
 </resources>

@@ -1,11 +1,12 @@
 package ru.vld43.mangadexapp.domain.repository
 
+import androidx.paging.PagingData
 import io.reactivex.Observable
 import ru.vld43.mangadexapp.domain.models.MangaWithCover
 
 interface MangaRepository {
 
-    fun getMangaList(): Observable<List<MangaWithCover>>
+    fun getPagingMangaList(): Observable<PagingData<MangaWithCover>>
 
-    fun searchManga(title: String): Observable<List<MangaWithCover>>
+    fun searchPagingManga(title: String): Observable<PagingData<MangaWithCover>>
 }
