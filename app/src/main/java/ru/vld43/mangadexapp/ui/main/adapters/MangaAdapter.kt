@@ -1,6 +1,7 @@
 package ru.vld43.mangadexapp.ui.main.adapters
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -10,8 +11,9 @@ import ru.vld43.mangadexapp.R
 import ru.vld43.mangadexapp.databinding.ItemMangaBinding
 import ru.vld43.mangadexapp.domain.models.MangaWithCover
 
-class MangaAdapter : PagingDataAdapter<MangaWithCover, MangaAdapter.MangaViewHolder>(
-    MangaItemCallback) {
+class MangaAdapter(private val onClickListener: (MangaWithCover) -> Unit) : PagingDataAdapter<MangaWithCover, MangaAdapter.MangaViewHolder>(
+    MangaItemCallback
+) {
 
     object MangaItemCallback : DiffUtil.ItemCallback<MangaWithCover>() {
 
@@ -28,7 +30,6 @@ class MangaAdapter : PagingDataAdapter<MangaWithCover, MangaAdapter.MangaViewHol
         return MangaViewHolder(binding)
     }
 
-
     override fun onBindViewHolder(holder: MangaViewHolder, position: Int) {
         val itemManga = getItem(position) ?: return
 
@@ -41,6 +42,10 @@ class MangaAdapter : PagingDataAdapter<MangaWithCover, MangaAdapter.MangaViewHol
         }
 
         holder.binding.mangaTitleTv.text = itemManga.manga.title
+
+        holder.binding.root.setOnClickListener {
+            onClickListener(itemManga)
+        }
     }
 
     inner class MangaViewHolder(val binding: ItemMangaBinding) :

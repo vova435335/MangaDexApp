@@ -9,7 +9,7 @@
         android:id="@+id/mainFragment"
         android:name="ru.vld43.mangadexapp.ui.main.MainFragment"
         android:label="fragment_main"
-        tools:layout="@layout/fragment_main" >
+        tools:layout="@layout/fragment_main">
         <action
             android:id="@+id/action_mainFragment_to_mangaDetailsFragment"
             app:destination="@id/mangaDetailsFragment" />
@@ -19,5 +19,9 @@
         android:id="@+id/mangaDetailsFragment"
         android:name="ru.vld43.mangadexapp.ui.details.MangaDetailsFragment"
         android:label="fragment_manga_details"
-        tools:layout="@layout/fragment_manga_details" />
+        tools:layout="@layout/fragment_manga_details" >
+        <argument
+            android:name="manga"
+            app:argType="ru.vld43.mangadexapp.domain.models.MangaWithCover" />
+    </fragment>
 </navigation>

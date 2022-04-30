@@ -67,7 +67,7 @@ class MainFragment : Fragment() {
     }
 
     private fun initRecycler() {
-        mangaAdapter = MangaAdapter()
+        mangaAdapter = MangaAdapter(viewModel::openDetails)
         binding.mangaListRv.adapter = mangaAdapter
         binding.mangaListRv.layoutManager = GridLayoutManager(requireContext(), SPAN_COUNT)
         mangaAdapter.addLoadStateListener {

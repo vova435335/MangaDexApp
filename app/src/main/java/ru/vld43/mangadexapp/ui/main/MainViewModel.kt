@@ -49,7 +49,7 @@ class MainViewModel(
             })
     }
 
-    fun openDetails() {
-        appNavigator.navigateToMangaDetails()
+    fun openDetails(mangaWithCover: MangaWithCover) {
+        appNavigator.navigateToMangaDetails(mangaWithCover)
     }
 }
