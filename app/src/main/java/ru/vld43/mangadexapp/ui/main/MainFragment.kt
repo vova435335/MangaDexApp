@@ -20,7 +20,6 @@ import ru.vld43.mangadexapp.ui.main.adapters.MangaAdapter
 import javax.inject.Inject
 
 private const val SPAN_COUNT = 3
-private const val SEARCH_DELAY = 300
 
 class MainFragment : Fragment() {
 
