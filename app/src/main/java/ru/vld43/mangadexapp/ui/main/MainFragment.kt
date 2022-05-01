@@ -11,13 +11,12 @@ import androidx.fragment.app.viewModels
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.snackbar.Snackbar
-import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import ru.vld43.mangadexapp.R
+import ru.vld43.mangadexapp.common.extensions.observe
 import ru.vld43.mangadexapp.databinding.FragmentMainBinding
 import ru.vld43.mangadexapp.ui.MainActivity
 import ru.vld43.mangadexapp.ui.main.adapters.MangaAdapter
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 private const val SPAN_COUNT = 3
@@ -51,7 +50,7 @@ class MainFragment : Fragment() {
         initViews()
         initRecycler()
         initData()
-        disposables.addAll(initSearchView())
+        initSearchView()
         observeViewModel()
     }
 
@@ -104,26 +103,21 @@ class MainFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        viewModel.mangaList.observe(viewLifecycleOwner) {
+        viewModel.mangaListState.observe(this) {
             mangaAdapter.submitData(lifecycle, it)
         }
     }
 
-    private fun initSearchView() =
-        Observable.create<String> {
-            binding.mangaSv.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean = false
+    private fun initSearchView() {
+        binding.mangaSv.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean = false
 
-                override fun onQueryTextChange(newText: String): Boolean {
-                    it.onNext(newText)
-                    return false
-                }
-            })
-        }
-            .debounce(SEARCH_DELAY.toLong(), TimeUnit.MILLISECONDS)
-            .subscribe {
-                viewModel.searchManga(it)
+            override fun onQueryTextChange(newText: String): Boolean {
+                viewModel.searchManga(newText)
+                return false
             }
+        })
+    }
 
     private fun showSnackBar(string: String) =
         Snackbar.make(binding.root, string, Snackbar.LENGTH_SHORT).show()

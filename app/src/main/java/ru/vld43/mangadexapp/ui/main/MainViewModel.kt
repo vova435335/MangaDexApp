@@ -1,11 +1,11 @@
 package ru.vld43.mangadexapp.ui.main
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.vld43.mangadexapp.domain.models.MangaWithCover
@@ -19,16 +19,16 @@ class MainViewModel(
     private val appNavigator: AppNavigator,
 ) : ViewModel() {
 
-    val mangaList: LiveData<PagingData<MangaWithCover>>
-        get() = mangaListMutable
+    val mangaListState: StateFlow<PagingData<MangaWithCover>>
+        get() = mutableMangaListState
 
-    private val mangaListMutable = MutableLiveData<PagingData<MangaWithCover>>()
+    private val mutableMangaListState = MutableStateFlow<PagingData<MangaWithCover>>(PagingData.empty())
 
     fun loadManga() {
         viewModelScope.launch {
             getMangaListUseCase()
                 .cachedIn(viewModelScope)
-                .collect { mangaListMutable.postValue(it) }
+                .collect(mutableMangaListState::emit)
         }
     }
 
@@ -36,7 +36,7 @@ class MainViewModel(
         viewModelScope.launch {
             searchMangaUseCase(title)
                 .cachedIn(viewModelScope)
-                .collect { mangaListMutable.postValue(it) }
+                .collect(mutableMangaListState::emit)
         }
     }
 
