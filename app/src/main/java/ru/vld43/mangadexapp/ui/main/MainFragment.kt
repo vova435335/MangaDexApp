@@ -87,7 +87,6 @@ class MainFragment : Fragment() {
                     binding.mangaSrl.isRefreshing = false
 
                     binding.notFoundLayout.root.isVisible = false
-                    binding.mangaListRv.scrollToPosition(0)
                 }
             }
         }
@@ -120,5 +119,4 @@ class MainFragment : Fragment() {
 
     private fun showSnackBar(string: String) =
         Snackbar.make(binding.root, string, Snackbar.LENGTH_SHORT).show()
-
 }
