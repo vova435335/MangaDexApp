@@ -1,16 +1,19 @@
-package ru.vld43.mangadexapp.ui
+package ru.vld43.mangadexapp.ui.main.adapters
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import ru.vld43.mangadexapp.R
 import ru.vld43.mangadexapp.databinding.ItemMangaBinding
 import ru.vld43.mangadexapp.domain.models.MangaWithCover
 
-class MangaAdapter : ListAdapter<MangaWithCover, MangaAdapter.MangaViewHolder>(MangaItemCallback) {
+class MangaAdapter(private val onClickListener: (MangaWithCover) -> Unit) : PagingDataAdapter<MangaWithCover, MangaAdapter.MangaViewHolder>(
+    MangaItemCallback
+) {
 
     object MangaItemCallback : DiffUtil.ItemCallback<MangaWithCover>() {
 
@@ -21,21 +24,14 @@ class MangaAdapter : ListAdapter<MangaWithCover, MangaAdapter.MangaViewHolder>(M
             oldItem == newItem
     }
 
-    var mangaList: List<MangaWithCover> = emptyList()
-        set(value) {
-            field = value
-            submitList(field)
-        }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MangaViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemMangaBinding.inflate(inflater, parent, false)
         return MangaViewHolder(binding)
     }
 
-
     override fun onBindViewHolder(holder: MangaViewHolder, position: Int) {
-        val itemManga = mangaList[position]
+        val itemManga = getItem(position) ?: return
 
         if (itemManga.coverUrl != "") {
             Picasso.get()
@@ -46,9 +42,11 @@ class MangaAdapter : ListAdapter<MangaWithCover, MangaAdapter.MangaViewHolder>(M
         }
 
         holder.binding.mangaTitleTv.text = itemManga.manga.title
-    }
 
-    override fun getItemCount(): Int = mangaList.size
+        holder.binding.root.setOnClickListener {
+            onClickListener(itemManga)
+        }
+    }
 
     inner class MangaViewHolder(val binding: ItemMangaBinding) :
         RecyclerView.ViewHolder(binding.root) 

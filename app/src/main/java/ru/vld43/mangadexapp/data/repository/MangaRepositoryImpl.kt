@@ -1,12 +1,19 @@
 package ru.vld43.mangadexapp.data.repository
 
-import io.reactivex.Observable
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.withContext
+import ru.vld43.mangadexapp.common.Constants.COVER_ART_URL
+import ru.vld43.mangadexapp.data.paging.MangaListPagerLoader
+import ru.vld43.mangadexapp.data.paging.MangaPagingSource
 import ru.vld43.mangadexapp.data.remote.MangaDexApi
 import ru.vld43.mangadexapp.data.remote.dto.manga.toManga
+import ru.vld43.mangadexapp.domain.models.Manga
 import ru.vld43.mangadexapp.domain.models.MangaWithCover
 import ru.vld43.mangadexapp.domain.repository.MangaRepository
-import ru.vld43.mangadexapp.common.Constants.COVER_ART_URL
-import ru.vld43.mangadexapp.domain.models.Manga
 import javax.inject.Inject
 
 class MangaRepositoryImpl @Inject constructor(
@@ -15,46 +22,77 @@ class MangaRepositoryImpl @Inject constructor(
 
     private companion object {
         const val IMAGE_SIZE = ".256.jpg"
+        const val PAGE_SIZE = 15
     }
 
-    override fun getMangaList(): Observable<List<MangaWithCover>> =
-        mangaDexApi.getMangaList().map { mangaListDto ->
-            mangaListDto.mangaList?.map { mangaDto ->
-                mangaDto.toManga()
-            } ?: emptyList()
+    override suspend fun getPagingMangaList(): Flow<PagingData<MangaWithCover>> {
+        val loader: MangaListPagerLoader = { pageSize, pageIndex ->
+            getMangaList(pageSize, pageIndex)
         }
-            .flatMapIterable { it }
-            .concatMap { manga ->
-                mangaDexApi.getCoverArt(manga.coverId)
-                    .map {
-                        MangaWithCover(
-                            manga,
-                            createUrl(manga, it.data?.attributes?.fileName ?: "")
-                        )
-                    }
-            }
-            .toList()
-            .toObservable()
 
-    override fun searchManga(title: String): Observable<List<MangaWithCover>> =
-        mangaDexApi.searchManga(title).map { mangaListDto ->
-            mangaListDto.mangaList?.map { mangaDto ->
-                mangaDto.toManga()
-            } ?: emptyList()
+        return Pager(
+            config = PagingConfig(
+                pageSize = PAGE_SIZE,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { MangaPagingSource(loader) }
+        ).flow
+    }
+
+    override suspend fun searchPagingManga(title: String): Flow<PagingData<MangaWithCover>> {
+        val loader: MangaListPagerLoader = { pageSize, pageIndex ->
+            searchManga(
+                title = title,
+                pageSize = pageSize,
+                pageIndex = pageIndex
+            )
         }
-            .flatMapIterable { it }
-            .concatMap { manga ->
-                mangaDexApi.getCoverArt(manga.coverId)
-                    .map {
-                        MangaWithCover(
-                            manga,
-                            createUrl(manga, it.data?.attributes?.fileName ?: "")
-                        )
-                    }
-            }
-            .toList()
-            .toObservable()
 
+        return Pager(
+            config = PagingConfig(
+                pageSize = PAGE_SIZE,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { MangaPagingSource(loader) }
+        ).flow
+    }
+
+    private suspend fun getMangaList(pageSize: Int, pageIndex: Int): List<MangaWithCover> =
+        withContext(Dispatchers.IO) {
+            val offset = pageSize * pageIndex
+
+            mangaDexApi.getMangaList(pageSize, offset)
+                .body()
+                ?.mangaList
+                ?.map {
+                    val manga = it.toManga()
+                    val mangaCover = mangaDexApi.getCoverArt(manga.coverId).body()
+                    val imageUrl = createUrl(manga, mangaCover?.data?.attributes?.fileName ?: "")
+
+                    MangaWithCover(manga, imageUrl)
+                }
+                ?: emptyList()
+        }
+
+    private suspend fun searchManga(
+        pageSize: Int,
+        pageIndex: Int,
+        title: String,
+    ): List<MangaWithCover> = withContext(Dispatchers.IO) {
+        val offset = pageSize * pageIndex
+
+        mangaDexApi.searchManga(title, pageSize, offset)
+            .body()
+            ?.mangaList
+            ?.map {
+                val manga = it.toManga()
+                val mangaCover = mangaDexApi.getCoverArt(manga.coverId).body()
+                val imageUrl = createUrl(manga, mangaCover?.data?.attributes?.fileName ?: "")
+
+                MangaWithCover(manga, imageUrl)
+            }
+            ?: emptyList()
+    }
 
     private fun createUrl(manga: Manga, fileName: String): String =
         "$COVER_ART_URL/${manga.id}/$fileName$IMAGE_SIZE"

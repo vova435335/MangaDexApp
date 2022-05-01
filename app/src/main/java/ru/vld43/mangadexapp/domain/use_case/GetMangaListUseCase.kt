@@ -4,9 +4,9 @@ import ru.vld43.mangadexapp.domain.repository.MangaRepository
 import javax.inject.Inject
 
 class GetMangaListUseCase @Inject constructor(
-    private val mangaRepository: MangaRepository
+    private val mangaRepository: MangaRepository,
 ) {
 
-    operator fun invoke() = mangaRepository.getMangaList()
+    suspend operator fun invoke() = mangaRepository.getPagingMangaList()
 
 }

@@ -6,7 +6,9 @@ object Constants {
     const val COVER_ART_URL = "https://uploads.mangadex.org/covers"
 
     const val GET_MANGA_LIST = "/manga"
-    const val QUERY_LIMIT_KEY_PARAMETER = "limit"
+
+    const val QUERY_LIMIT_KEY = "limit"
+    const val QUERY_OFFSET_KEY = "offset"
 
     const val GET_COVER_ART = "/cover/{id}"
 
