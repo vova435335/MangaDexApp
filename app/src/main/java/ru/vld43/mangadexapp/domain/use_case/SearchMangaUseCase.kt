@@ -7,5 +7,5 @@ class SearchMangaUseCase @Inject constructor(
     private val mangaRepository: MangaRepository,
 ) {
 
-    operator fun invoke(title: String) = mangaRepository.searchPagingManga(title)
+    suspend operator fun invoke(title: String) = mangaRepository.searchPagingManga(title)
 }

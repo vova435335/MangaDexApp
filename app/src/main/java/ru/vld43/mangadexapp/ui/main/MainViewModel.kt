@@ -3,9 +3,11 @@ package ru.vld43.mangadexapp.ui.main
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
-import io.reactivex.disposables.CompositeDisposable
-import ru.vld43.mangadexapp.common.extensions.applySchedulers
+import androidx.paging.cachedIn
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import ru.vld43.mangadexapp.domain.models.MangaWithCover
 import ru.vld43.mangadexapp.domain.use_case.GetMangaListUseCase
 import ru.vld43.mangadexapp.domain.use_case.SearchMangaUseCase
@@ -22,31 +24,20 @@ class MainViewModel(
 
     private val mangaListMutable = MutableLiveData<PagingData<MangaWithCover>>()
 
-    private var disposables = CompositeDisposable()
-
-    override fun onCleared() {
-        super.onCleared()
-        disposables.dispose()
-    }
-
     fun loadManga() {
-        disposables.add(getMangaListUseCase()
-            .applySchedulers()
-            .subscribe { mangaList ->
-                mangaListMutable.postValue(mangaList)
-            })
+        viewModelScope.launch {
+            getMangaListUseCase()
+                .cachedIn(viewModelScope)
+                .collect { mangaListMutable.postValue(it) }
+        }
     }
 
     fun searchManga(title: String) {
-        disposables.add(searchMangaUseCase(title)
-            .applySchedulers()
-            .subscribe { mangaList ->
-                if (title.isEmpty()) {
-                    loadManga()
-                } else {
-                    mangaListMutable.postValue(mangaList)
-                }
-            })
+        viewModelScope.launch {
+            searchMangaUseCase(title)
+                .cachedIn(viewModelScope)
+                .collect { mangaListMutable.postValue(it) }
+        }
     }
 
     fun openDetails(mangaWithCover: MangaWithCover) {

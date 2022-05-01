@@ -7,6 +7,6 @@ class GetMangaListUseCase @Inject constructor(
     private val mangaRepository: MangaRepository,
 ) {
 
-    operator fun invoke() = mangaRepository.getPagingMangaList()
+    suspend operator fun invoke() = mangaRepository.getPagingMangaList()
 
 }

@@ -1,32 +1,35 @@
 package ru.vld43.mangadexapp.data.paging
 
+import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import androidx.paging.rxjava2.RxPagingSource
-import io.reactivex.Single
 import ru.vld43.mangadexapp.domain.models.MangaWithCover
 import javax.inject.Inject
 
-typealias MangaListPagerLoader = (pageSize: Int, pageIndex: Int) -> Single<List<MangaWithCover>>
+typealias MangaListPagerLoader = suspend (pageSize: Int, pageIndex: Int) -> List<MangaWithCover>
 
 class MangaPagingSource @Inject constructor(
     private val loader: MangaListPagerLoader,
-) : RxPagingSource<Int, MangaWithCover>() {
-
-    override fun loadSingle(params: LoadParams<Int>): Single<LoadResult<Int, MangaWithCover>> {
-        val pageIndex = params.key ?: 0
-
-        return loader(params.loadSize, pageIndex).map {
-            LoadResult.Page(
-                    data = it,
-                    prevKey = if (pageIndex == 0) null else pageIndex - 1,
-                    nextKey = if (it.size == params.loadSize) null else pageIndex + 1
-                )
-        }
-    }
+) : PagingSource<Int, MangaWithCover>() {
 
     override fun getRefreshKey(state: PagingState<Int, MangaWithCover>): Int? {
         val anchorPosition = state.anchorPosition ?: return null
         val page = state.closestPageToPosition(anchorPosition) ?: return null
         return page.prevKey?.plus(1) ?: page.nextKey?.minus(1)
+    }
+
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MangaWithCover> {
+        val pageIndex = params.key ?: 0
+
+        return try {
+            val mangaList = loader(pageIndex, params.loadSize)
+
+            return LoadResult.Page(
+                data = mangaList,
+                prevKey = if (pageIndex == 0) null else pageIndex - 1,
+                nextKey = if (mangaList.size == params.loadSize) null else pageIndex + 1
+            )
+        } catch (e: Exception) {
+            LoadResult.Error(throwable = e)
+        }
     }
 }

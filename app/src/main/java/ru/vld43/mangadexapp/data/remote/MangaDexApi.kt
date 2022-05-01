@@ -1,7 +1,6 @@
 package ru.vld43.mangadexapp.data.remote
 
-import io.reactivex.Observable
-import io.reactivex.Single
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -17,20 +16,20 @@ import ru.vld43.mangadexapp.data.remote.dto.manga.MangaListDto
 interface MangaDexApi {
 
     @GET(GET_MANGA_LIST)
-    fun getMangaList(
+    suspend fun getMangaList(
         @Query(QUERY_LIMIT_KEY) limit: Int,
-        @Query(QUERY_OFFSET_KEY) offset: Int
-    ): Single<MangaListDto>
+        @Query(QUERY_OFFSET_KEY) offset: Int,
+    ): Response<MangaListDto>
 
     @GET(GET_COVER_ART)
-    fun getCoverArt(
+    suspend fun getCoverArt(
         @Path("id") id: String,
-    ): Observable<CoverArtDto>
+    ): Response<CoverArtDto>
 
     @GET(SEARCH_MANGA)
-    fun searchManga(
+    suspend fun searchManga(
         @Query(QUERY_SEARCH_KEY_PARAMETER) title: String,
         @Query(QUERY_LIMIT_KEY) limit: Int,
-        @Query(QUERY_OFFSET_KEY) offset: Int
-    ): Single<MangaListDto>
+        @Query(QUERY_OFFSET_KEY) offset: Int,
+    ): Response<MangaListDto>
 }
