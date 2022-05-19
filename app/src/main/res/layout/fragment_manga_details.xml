@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.details.MangaDetailsFragment">
+    tools:context=".ui.details.MangaDetailsFragment"
+    android:scrollbars="none">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -26,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            android:layout_marginVertical="16dp"
+            android:layout_marginVertical="16sp"
             android:textColor="@color/black"
             android:textSize="22sp"
             android:textStyle="bold"
@@ -42,24 +43,55 @@
             android:layout_height="wrap_content"
             android:paddingHorizontal="16dp"
             android:textSize="18sp"
-            app:layout_constraintBottom_toTopOf="@+id/details_tag_rv"
+            app:layout_constraintBottom_toTopOf="@+id/details_tag_cg"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/details_title_tv"
-            tools:text="Последние слова, произнесённые Королем Пиратов Гол Д. Роджером перед казнью, вдохновили многих выйти в море: «Мои сокровища? Я завещаю их тому, кто сможет их найти. Ищите! Я все оставил в одном месте!». Лишённые сна и покоя люди ринулись на Гранд Лайн, самое опасное место в мире. Так началась великая эра пиратов… Но с каждым годом романтиков становилось все меньше, их постепенно вытесняли прагматичные пираты-разбойники, которым награбленное добро было куда ближе, чем какие-то «никчёмные мечты». Но вот, одним прекрасным днем, семнадцатилетний Монки Д. Луффи исполнил заветную мечту детства - отправился в море. Его цель — ни много, ни мало стать новым Королём Пиратов. За достаточно короткий срок юному капитану удаётся собрать команду, состоящую из не менее амбициозных искателей приключений. И пусть ими движут совершенно разные устремления, главное, этим ребятам важны не столько деньги и слава, сколько куда более ценное – принципы и верность друзьям. И ещё – служение Мечте. Что же, пока по Гранд Лайн плавают такие люди, Великая Эра Пиратов всегда будет с нами!" />
+            tools:text="@string/manga_details_description_tools" />
 
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/details_tag_rv"
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/details_tag_cg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@+id/details_content_rating_tv"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/details_status_tv"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/details_description_tv"
-            tools:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
-            tools:listitem="@layout/item_tag"
-            tools:spanCount="4" />
+            app:layout_constraintTop_toBottomOf="@+id/details_description_tv" />
+
+        <TextView
+            android:id="@+id/details_status_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:text="@string/status"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/diver_top"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/details_tag_cg" />
+
+        <TextView
+            android:id="@+id/details_status_value_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/details_status_tv"
+            app:layout_constraintStart_toEndOf="@+id/details_status_tv"
+            app:layout_constraintTop_toTopOf="@+id/details_status_tv"
+            tools:text="ongoing" />
+
+        <View
+            android:id="@+id/diver_top"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="16dp"
+            android:background="@android:color/darker_gray"
+            app:layout_constraintBottom_toTopOf="@+id/details_content_rating_tv"
+            app:layout_constraintTop_toBottomOf="@+id/details_status_tv" />
 
         <TextView
             android:id="@+id/details_content_rating_tv"
@@ -68,25 +100,24 @@
             android:layout_marginHorizontal="16dp"
             android:text="@string/content_rating"
             android:textColor="@color/black"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/details_last_chapter_tv"
+            app:layout_constraintBottom_toTopOf="@+id/diver_bottom"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/details_tag_rv" />
+            app:layout_constraintTop_toBottomOf="@+id/diver_top" />
 
         <TextView
             android:id="@+id/details_content_rating_value_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@+id/details_content_rating_tv"
             app:layout_constraintStart_toEndOf="@+id/details_content_rating_tv"
             app:layout_constraintTop_toTopOf="@+id/details_content_rating_tv"
             tools:text="safe" />
 
         <View
-            android:id="@+id/diver"
+            android:id="@+id/diver_bottom"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginHorizontal="16dp"
@@ -100,26 +131,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
             android:text="@string/last_chapter"
             android:textColor="@color/black"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/details_content_rating_tv" />
+            app:layout_constraintTop_toBottomOf="@+id/diver_bottom" />
 
         <TextView
             android:id="@+id/details_last_chapter_value_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@+id/details_last_chapter_tv"
             app:layout_constraintStart_toEndOf="@+id/details_last_chapter_tv"
             app:layout_constraintTop_toTopOf="@+id/details_last_chapter_tv"
             tools:text="40" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </ScrollView>

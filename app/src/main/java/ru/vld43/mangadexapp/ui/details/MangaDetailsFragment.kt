@@ -8,9 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.chip.Chip
 import com.squareup.picasso.Picasso
 import ru.vld43.mangadexapp.common.extensions.observe
 import ru.vld43.mangadexapp.databinding.FragmentMangaDetailsBinding
+import ru.vld43.mangadexapp.domain.models.MangaDetailsWithCover
 import ru.vld43.mangadexapp.ui.MainActivity
 import javax.inject.Inject
 
@@ -47,18 +49,27 @@ class MangaDetailsFragment : Fragment() {
 
     private fun observeViewModel() {
         viewModel.mangaState.observe(this) {
-            Log.d("TAG", "observeViewModel: $it")
-            with(binding) {
-                if(it.coverUrl.isNotEmpty()) {
-                    Picasso.get()
-                        .load(it.coverUrl)
-                        .into(detailsCoverArtIv)
-                }
-                detailsTitleTv.text = it.title
-                detailsDescriptionTv.text = it.description
-                detailsContentRatingValueTv.text = it.contentRating
-                detailsLastChapterValueTv.text = it.lastChapter
+            initViews(it)
+        }
+    }
+
+    private fun initViews(manga: MangaDetailsWithCover) {
+        with(binding) {
+            if (manga.coverUrl.isNotEmpty()) {
+                Picasso.get()
+                    .load(manga.coverUrl)
+                    .into(detailsCoverArtIv)
             }
+            detailsTitleTv.text = manga.title
+            detailsDescriptionTv.text = manga.description
+            manga.tags.map { tag ->
+                val chip = Chip(context)
+                chip.text = tag
+                detailsTagCg.addView(chip)
+            }
+            detailsStatusValueTv.text = manga.status
+            detailsContentRatingValueTv.text = manga.contentRating
+            detailsLastChapterValueTv.text = manga.lastChapter
         }
     }
 
