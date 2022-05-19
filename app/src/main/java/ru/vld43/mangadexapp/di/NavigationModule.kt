@@ -1,6 +1,5 @@
 package ru.vld43.mangadexapp.di
 
-import android.content.Context
 import androidx.navigation.NavController
 import dagger.Module
 import dagger.Provides

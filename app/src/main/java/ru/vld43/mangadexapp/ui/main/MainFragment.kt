@@ -11,7 +11,6 @@ import androidx.fragment.app.viewModels
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.snackbar.Snackbar
-import io.reactivex.disposables.CompositeDisposable
 import ru.vld43.mangadexapp.R
 import ru.vld43.mangadexapp.common.extensions.observe
 import ru.vld43.mangadexapp.databinding.FragmentMainBinding
@@ -31,8 +30,6 @@ class MainFragment : Fragment() {
 
     private lateinit var mangaAdapter: MangaAdapter
 
-    private val disposables = CompositeDisposable()
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -51,11 +48,6 @@ class MainFragment : Fragment() {
         initData()
         initSearchView()
         observeViewModel()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        disposables.dispose()
     }
 
     private fun initViews() {

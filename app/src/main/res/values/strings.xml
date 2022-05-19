@@ -11,4 +11,6 @@
     <string name="try_again_button">Try Again</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="content_rating">Content Rating:</string>
+    <string name="last_chapter">Last Chapter:</string>
 </resources>

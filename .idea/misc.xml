@@ -11,10 +11,14 @@
         <entry key="..\:/ASP/MangaDexApp/app/src/main/res/drawable/shape_search_view_background.xml" value="0.25833333333333336" />
         <entry key="..\:/ASP/MangaDexApp/app/src/main/res/drawable/shape_search_view_query_background.xml" value="0.15416666666666667" />
         <entry key="..\:/ASP/MangaDexApp/app/src/main/res/layout/activity_main.xml" value="0.17222222222222222" />
+        <entry key="..\:/ASP/MangaDexApp/app/src/main/res/layout/fragment_main.xml" value="0.2484375" />
+        <entry key="..\:/ASP/MangaDexApp/app/src/main/res/layout/fragment_manga_details.xml" value="0.264" />
         <entry key="..\:/ASP/MangaDexApp/app/src/main/res/layout/item_manga.xml" value="0.22314814814814815" />
+        <entry key="..\:/ASP/MangaDexApp/app/src/main/res/layout/item_tag.xml" value="0.2484375" />
         <entry key="..\:/ASP/MangaDexApp/app/src/main/res/layout/layout_not_found.xml" value="0.2484375" />
         <entry key="..\:/ASP/MangaDexApp/app/src/main/res/layout/layout_query_error.xml" value="0.259375" />
         <entry key="..\:/ASP/MangaDexApp/app/src/main/res/layout/manga_item.xml" value="0.17222222222222222" />
+        <entry key="..\:/ASP/MangaDexApp/app/src/main/res/layout/part_default_load_state.xml" value="0.2484375" />
       </map>
     </option>
   </component>
