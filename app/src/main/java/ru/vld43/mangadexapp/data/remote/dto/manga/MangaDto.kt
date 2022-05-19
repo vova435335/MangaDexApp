@@ -29,7 +29,7 @@ fun MangaDto.toManga(): Manga =
 fun MangaDto.toMangaDetails(): MangaDetails =
     MangaDetails(
         id = id ?: "",
-        title =  attributes?.altTitles
+        title = attributes?.altTitles
             ?.mapNotNull { it.ru }
             ?.firstOrNull()
             ?: attributes?.title?.en
@@ -41,5 +41,6 @@ fun MangaDto.toMangaDetails(): MangaDetails =
             ?: emptyList(),
         status = attributes?.status ?: NONE,
         contentRating = attributes?.contentRating ?: NONE,
-        lastChapter = attributes?.lastChapter ?: "-"
+        lastChapter = if (attributes?.lastChapter ?: "-" == "") "-"
+        else attributes?.lastChapter ?: "-"
     )
