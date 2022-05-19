@@ -21,7 +21,7 @@
         android:label="fragment_manga_details"
         tools:layout="@layout/fragment_manga_details" >
         <argument
-            android:name="manga"
-            app:argType="ru.vld43.mangadexapp.domain.models.MangaWithCover" />
+            android:name="mangaId"
+            app:argType="string" />
     </fragment>
 </navigation>

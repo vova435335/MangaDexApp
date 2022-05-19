@@ -7,6 +7,5 @@ import kotlinx.parcelize.Parcelize
 data class Manga(
     val id: String,
     val title: String,
-    val description: String,
     val coverId: String,
 ) : Parcelable

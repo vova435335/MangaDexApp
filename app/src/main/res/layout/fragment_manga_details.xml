@@ -1,14 +1,153 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.details.MangaDetailsFragment">
+    tools:context=".ui.details.MangaDetailsFragment"
+    android:scrollbars="none">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content">
 
-</FrameLayout>
+        <ImageView
+            android:id="@+id/details_cover_art_iv"
+            android:layout_width="match_parent"
+            android:layout_height="600dp"
+            android:contentDescription="@string/manga_cover_art_content_description"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/details_title_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="16sp"
+            android:textColor="@color/black"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/details_description_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/details_cover_art_iv"
+            tools:text="One Piece" />
+
+        <TextView
+            android:id="@+id/details_description_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="16dp"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@+id/details_tag_cg"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/details_title_tv"
+            tools:text="@string/manga_details_description_tools" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/details_tag_cg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/details_status_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/details_description_tv" />
+
+        <TextView
+            android:id="@+id/details_status_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:text="@string/status"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/diver_top"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/details_tag_cg" />
+
+        <TextView
+            android:id="@+id/details_status_value_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/details_status_tv"
+            app:layout_constraintStart_toEndOf="@+id/details_status_tv"
+            app:layout_constraintTop_toTopOf="@+id/details_status_tv"
+            tools:text="ongoing" />
+
+        <View
+            android:id="@+id/diver_top"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="16dp"
+            android:background="@android:color/darker_gray"
+            app:layout_constraintBottom_toTopOf="@+id/details_content_rating_tv"
+            app:layout_constraintTop_toBottomOf="@+id/details_status_tv" />
+
+        <TextView
+            android:id="@+id/details_content_rating_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:text="@string/content_rating"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/diver_bottom"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/diver_top" />
+
+        <TextView
+            android:id="@+id/details_content_rating_value_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/details_content_rating_tv"
+            app:layout_constraintStart_toEndOf="@+id/details_content_rating_tv"
+            app:layout_constraintTop_toTopOf="@+id/details_content_rating_tv"
+            tools:text="safe" />
+
+        <View
+            android:id="@+id/diver_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="16dp"
+            android:background="@android:color/darker_gray"
+            app:layout_constraintBottom_toTopOf="@+id/details_last_chapter_tv"
+            app:layout_constraintTop_toBottomOf="@+id/details_content_rating_tv" />
+
+        <TextView
+            android:id="@+id/details_last_chapter_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="16dp"
+            android:text="@string/last_chapter"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/diver_bottom" />
+
+        <TextView
+            android:id="@+id/details_last_chapter_value_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/details_last_chapter_tv"
+            app:layout_constraintStart_toEndOf="@+id/details_last_chapter_tv"
+            app:layout_constraintTop_toTopOf="@+id/details_last_chapter_tv"
+            tools:text="40" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

@@ -3,9 +3,10 @@ package ru.vld43.mangadexapp.domain.use_case
 import ru.vld43.mangadexapp.domain.repository.MangaRepository
 import javax.inject.Inject
 
-class GetMangaListUseCase @Inject constructor(
+class GetMangaUseCase @Inject constructor(
     private val mangaRepository: MangaRepository,
 ) {
 
-    suspend operator fun invoke() = mangaRepository.getPagingMangaList()
+   operator fun invoke(mangaId: String) =
+        mangaRepository.getManga(mangaId)
 }

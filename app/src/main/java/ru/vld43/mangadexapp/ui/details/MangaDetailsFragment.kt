@@ -6,23 +6,71 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
-import ru.vld43.mangadexapp.R
-
+import com.google.android.material.chip.Chip
+import com.squareup.picasso.Picasso
+import ru.vld43.mangadexapp.common.extensions.observe
+import ru.vld43.mangadexapp.databinding.FragmentMangaDetailsBinding
+import ru.vld43.mangadexapp.domain.models.MangaDetailsWithCover
+import ru.vld43.mangadexapp.ui.MainActivity
+import javax.inject.Inject
 
 class MangaDetailsFragment : Fragment() {
 
     private val arguments: MangaDetailsFragmentArgs by navArgs()
 
+    @Inject
+    lateinit var viewModelFactory: MangaDetailsViewModelFactory
+    private val viewModel by viewModels<MangaDetailsViewModel> { viewModelFactory }
+
+    private lateinit var binding: FragmentMangaDetailsBinding
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
-        return inflater.inflate(R.layout.fragment_manga_details, container, false)
+    ): View {
+        binding = FragmentMangaDetailsBinding.inflate(layoutInflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        MainActivity.appComponent.inject(this)
+
+        observeViewModel()
+        initData(arguments.mangaId)
     }
+
+    private fun initData(mangaId: String) {
+        viewModel.loadManga(mangaId)
+    }
+
+    private fun observeViewModel() {
+        viewModel.mangaState.observe(this) {
+            initViews(it)
+        }
+    }
+
+    private fun initViews(manga: MangaDetailsWithCover) {
+        with(binding) {
+            if (manga.coverUrl.isNotEmpty()) {
+                Picasso.get()
+                    .load(manga.coverUrl)
+                    .into(detailsCoverArtIv)
+            }
+            detailsTitleTv.text = manga.title
+            detailsDescriptionTv.text = manga.description
+            manga.tags.map { tag ->
+                val chip = Chip(context)
+                chip.text = tag
+                detailsTagCg.addView(chip)
+            }
+            detailsStatusValueTv.text = manga.status
+            detailsContentRatingValueTv.text = manga.contentRating
+            detailsLastChapterValueTv.text = manga.lastChapter
+        }
+    }
+
 }

@@ -12,10 +12,10 @@ class LocalizedStringDeserializer : JsonDeserializer<LocalizedString> {
         json: JsonElement?,
         typeOfT: Type?,
         context: JsonDeserializationContext?
-    ): LocalizedString {
+    ): LocalizedString? {
 
         if (json?.isJsonArray == true) {
-            return LocalizedString(null, null, null, null, null, null)
+            return null
         }
 
         val jsonObject = json?.asJsonObject

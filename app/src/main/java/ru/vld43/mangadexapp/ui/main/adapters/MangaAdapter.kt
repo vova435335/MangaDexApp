@@ -1,7 +1,6 @@
 package ru.vld43.mangadexapp.ui.main.adapters
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -18,7 +17,7 @@ class MangaAdapter(private val onClickListener: (MangaWithCover) -> Unit) : Pagi
     object MangaItemCallback : DiffUtil.ItemCallback<MangaWithCover>() {
 
         override fun areItemsTheSame(oldItem: MangaWithCover, newItem: MangaWithCover): Boolean =
-            oldItem.manga.id == newItem.manga.id
+            oldItem.id == newItem.id
 
         override fun areContentsTheSame(oldItem: MangaWithCover, newItem: MangaWithCover): Boolean =
             oldItem == newItem
@@ -41,7 +40,7 @@ class MangaAdapter(private val onClickListener: (MangaWithCover) -> Unit) : Pagi
             holder.binding.mangaCoverIv.setImageResource(R.drawable.ic_not_cover)
         }
 
-        holder.binding.mangaTitleTv.text = itemManga.manga.title
+        holder.binding.mangaTitleTv.text = itemManga.title
 
         holder.binding.root.setOnClickListener {
             onClickListener(itemManga)

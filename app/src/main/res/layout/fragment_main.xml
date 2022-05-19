@@ -58,10 +58,12 @@
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <include
+        android:visibility="gone"
         android:id="@+id/query_error_layout"
         layout="@layout/layout_query_error" />
 
     <include
+        android:visibility="gone"
         android:id="@+id/not_found_layout"
         layout="@layout/layout_not_found" />
 
