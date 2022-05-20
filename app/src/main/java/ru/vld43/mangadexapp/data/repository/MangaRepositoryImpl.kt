@@ -8,6 +8,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import ru.vld43.mangadexapp.common.Constants.COVER_ART_URL
+import ru.vld43.mangadexapp.common.data.extansions.map
+import ru.vld43.mangadexapp.common.data.extansions.toResult
 import ru.vld43.mangadexapp.data.paging.MangaListPagerLoader
 import ru.vld43.mangadexapp.data.paging.MangaPagingSource
 import ru.vld43.mangadexapp.data.remote.MangaDexApi
@@ -61,30 +63,28 @@ class MangaRepositoryImpl @Inject constructor(
     }
 
     override fun getManga(mangaId: String): Flow<MangaDetailsWithCover> = flow {
-        val manga = mangaDexApi.getManga(mangaId).body()?.manga?.toMangaDetails()
-            ?: MangaDetails(
-                "",
-                "",
-                "",
-                "",
-                emptyList(),
-                "",
-                "",
-                ""
-            )
+//        val manga = mangaDexApi.getManga(mangaId).body()?.manga?.toMangaDetails() ?: MangaDetails()
+        val manga = mangaDexApi.getManga(mangaId)
+            .toResult()
+            .map(ifSuccess = {
+                    1
+            })
         val mangaCover = mangaDexApi.getCoverArt(manga.coverId).body()
         val coverUrl = createUrl(manga.id, mangaCover?.data?.attributes?.fileName ?: "")
 
-        emit(MangaDetailsWithCover(
-            id = manga.id,
-            title = manga.title,
-            description = manga.description,
-            tags = manga.tags,
-            status = manga.status,
-            contentRating = manga.contentRating,
-            lastChapter = manga.lastChapter,
-            coverUrl = coverUrl
-        ))
+
+        emit(
+            MangaDetailsWithCover(
+                id = manga.id,
+                title = manga.title,
+                description = manga.description,
+                tags = manga.tags,
+                status = manga.status,
+                contentRating = manga.contentRating,
+                lastChapter = manga.lastChapter,
+                coverUrl = coverUrl
+            )
+        )
     }
 
     private suspend fun getMangaList(pageSize: Int, pageIndex: Int): List<MangaWithCover> =
