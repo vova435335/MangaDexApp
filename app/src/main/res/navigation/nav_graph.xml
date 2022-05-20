@@ -23,5 +23,17 @@
         <argument
             android:name="mangaId"
             app:argType="string" />
+        <action
+            android:id="@+id/action_mangaDetailsFragment_to_chaptersFragment"
+            app:destination="@id/chaptersFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chaptersFragment"
+        android:name="ru.vld43.mangadexapp.ui.chapters.ChaptersFragment"
+        android:label="fragment_chapters"
+        tools:layout="@layout/fragment_chapters" >
+        <argument
+            android:name="mangaId"
+            app:argType="string" />
     </fragment>
 </navigation>
