@@ -13,9 +13,8 @@ fun <T> Response<T>.toResult(): Result<T> {
 
 fun <T, R> Result<T>.map(
     ifSuccess: ((T) -> R)? = null,
-    ifError: (() -> String?) = { null }
+    ifError: (() -> String) = { "" }
 ): Result<R> = when {
     this is Result.Success && ifSuccess != null -> Result.Success(ifSuccess(data))
     else -> Result.Error(ifError.invoke())
 }
-

@@ -14,9 +14,8 @@ import ru.vld43.mangadexapp.common.data.models.Result
 import ru.vld43.mangadexapp.data.paging.MangaListPagerLoader
 import ru.vld43.mangadexapp.data.paging.MangaPagingSource
 import ru.vld43.mangadexapp.data.remote.MangaDexApi
-import ru.vld43.mangadexapp.data.remote.dto.cover_art.CoverArtDto
-import ru.vld43.mangadexapp.data.remote.dto.manga.MangaDto
 import ru.vld43.mangadexapp.data.remote.dto.manga.toManga
+import ru.vld43.mangadexapp.data.remote.dto.mappers.MangaByIdDtoToMangaCoverIdMapper
 import ru.vld43.mangadexapp.data.remote.dto.mappers.MangaDetailsWithCoverMapper
 import ru.vld43.mangadexapp.domain.models.MangaDetailsWithCover
 import ru.vld43.mangadexapp.domain.models.MangaWithCover
@@ -65,20 +64,19 @@ class MangaRepositoryImpl @Inject constructor(
     }
 
     override fun getManga(mangaId: String): Flow<Result<MangaDetailsWithCover>> = flow {
-        val manga = mangaDexApi.getManga(mangaId)
-            .toResult()
+        when (val manga = mangaDexApi.getManga(mangaId).toResult()) {
+            is Result.Success -> {
+                val mangaCover = mangaDexApi.getCoverArt(
+                    MangaByIdDtoToMangaCoverIdMapper.map(manga.data)
+                ).body()
 
-        if (manga is Result.Success) {
-            val mangaCover = mangaDexApi.getCoverArt(
-                manga.data.manga?.relationships?.first { it.type == "cover_art" }?.id ?: ""
-            ).body()
-            val domainModel = manga.map(ifSuccess = {
-                MangaDetailsWithCoverMapper.map(
-                    manga.data.manga ?: MangaDto(),
-                    mangaCover ?: CoverArtDto()
-                )
-            })
-            emit(domainModel)
+                val domainModel = manga.map(ifSuccess = {
+                    MangaDetailsWithCoverMapper.map(manga.data, mangaCover)
+                })
+
+                emit(domainModel)
+            }
+            else -> emit(manga.map(ifError = { "Ошибка сети!" }))
         }
     }
 

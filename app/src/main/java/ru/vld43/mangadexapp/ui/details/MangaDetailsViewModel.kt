@@ -20,16 +20,7 @@ class MangaDetailsViewModel(
         get() = mutableMangaState
 
     private val mutableMangaState = MutableStateFlow(
-        MangaDetailsWithCover(
-            "",
-            "",
-            "",
-            emptyList(),
-            "",
-            "",
-            "",
-            ""
-        )
+        MangaDetailsWithCover()
     )
 
     fun loadManga(mangaId: String) {
@@ -38,7 +29,7 @@ class MangaDetailsViewModel(
                 .collect {
                     when (it) {
                         is Result.Success -> mutableMangaState.emit(it.data)
-                        is Result.Error -> {}
+                        is Result.Error -> {  }
                     }
                 }
         }
