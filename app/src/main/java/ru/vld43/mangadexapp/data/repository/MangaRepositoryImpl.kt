@@ -10,12 +10,14 @@ import kotlinx.coroutines.withContext
 import ru.vld43.mangadexapp.common.Constants.COVER_ART_URL
 import ru.vld43.mangadexapp.common.data.extansions.map
 import ru.vld43.mangadexapp.common.data.extansions.toResult
+import ru.vld43.mangadexapp.common.data.models.Result
 import ru.vld43.mangadexapp.data.paging.MangaListPagerLoader
 import ru.vld43.mangadexapp.data.paging.MangaPagingSource
 import ru.vld43.mangadexapp.data.remote.MangaDexApi
+import ru.vld43.mangadexapp.data.remote.dto.cover_art.CoverArtDto
+import ru.vld43.mangadexapp.data.remote.dto.manga.MangaDto
 import ru.vld43.mangadexapp.data.remote.dto.manga.toManga
-import ru.vld43.mangadexapp.data.remote.dto.manga.toMangaDetails
-import ru.vld43.mangadexapp.domain.models.MangaDetails
+import ru.vld43.mangadexapp.data.remote.dto.mappers.MangaDetailsWithCoverMapper
 import ru.vld43.mangadexapp.domain.models.MangaDetailsWithCover
 import ru.vld43.mangadexapp.domain.models.MangaWithCover
 import ru.vld43.mangadexapp.domain.repository.MangaRepository
@@ -62,29 +64,22 @@ class MangaRepositoryImpl @Inject constructor(
         ).flow
     }
 
-    override fun getManga(mangaId: String): Flow<MangaDetailsWithCover> = flow {
-//        val manga = mangaDexApi.getManga(mangaId).body()?.manga?.toMangaDetails() ?: MangaDetails()
+    override fun getManga(mangaId: String): Flow<Result<MangaDetailsWithCover>> = flow {
         val manga = mangaDexApi.getManga(mangaId)
             .toResult()
-            .map(ifSuccess = {
-                    1
+
+        if (manga is Result.Success) {
+            val mangaCover = mangaDexApi.getCoverArt(
+                manga.data.manga?.relationships?.first { it.type == "cover_art" }?.id ?: ""
+            ).body()
+            val domainModel = manga.map(ifSuccess = {
+                MangaDetailsWithCoverMapper.map(
+                    manga.data.manga ?: MangaDto(),
+                    mangaCover ?: CoverArtDto()
+                )
             })
-        val mangaCover = mangaDexApi.getCoverArt(manga.coverId).body()
-        val coverUrl = createUrl(manga.id, mangaCover?.data?.attributes?.fileName ?: "")
-
-
-        emit(
-            MangaDetailsWithCover(
-                id = manga.id,
-                title = manga.title,
-                description = manga.description,
-                tags = manga.tags,
-                status = manga.status,
-                contentRating = manga.contentRating,
-                lastChapter = manga.lastChapter,
-                coverUrl = coverUrl
-            )
-        )
+            emit(domainModel)
+        }
     }
 
     private suspend fun getMangaList(pageSize: Int, pageIndex: Int): List<MangaWithCover> =

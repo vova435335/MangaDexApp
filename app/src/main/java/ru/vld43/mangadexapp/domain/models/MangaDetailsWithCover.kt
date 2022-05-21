@@ -7,6 +7,6 @@ data class MangaDetailsWithCover(
     val tags: List<String>,
     val status: String,
     val contentRating: String,
-    val lastChapter: String,
+    val lastChapter: String?,
     val coverUrl: String
 )

@@ -10,9 +10,8 @@ import ru.vld43.mangadexapp.R
 import ru.vld43.mangadexapp.databinding.ItemMangaBinding
 import ru.vld43.mangadexapp.domain.models.MangaWithCover
 
-class MangaAdapter(private val onClickListener: (MangaWithCover) -> Unit) : PagingDataAdapter<MangaWithCover, MangaAdapter.MangaViewHolder>(
-    MangaItemCallback
-) {
+class MangaAdapter(private val onClickListener: (MangaWithCover) -> Unit) :
+    PagingDataAdapter<MangaWithCover, MangaAdapter.MangaViewHolder>(MangaItemCallback) {
 
     object MangaItemCallback : DiffUtil.ItemCallback<MangaWithCover>() {
 
@@ -48,5 +47,5 @@ class MangaAdapter(private val onClickListener: (MangaWithCover) -> Unit) : Pagi
     }
 
     inner class MangaViewHolder(val binding: ItemMangaBinding) :
-        RecyclerView.ViewHolder(binding.root) 
+        RecyclerView.ViewHolder(binding.root)
 }

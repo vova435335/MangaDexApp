@@ -2,6 +2,7 @@ package ru.vld43.mangadexapp.domain.repository
 
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
+import ru.vld43.mangadexapp.common.data.models.Result
 import ru.vld43.mangadexapp.domain.models.MangaDetailsWithCover
 import ru.vld43.mangadexapp.domain.models.MangaWithCover
 
@@ -11,5 +12,5 @@ interface MangaRepository {
 
     suspend fun searchPagingManga(title: String): Flow<PagingData<MangaWithCover>>
 
-    fun getManga(mangaId: String) : Flow<MangaDetailsWithCover>
+    fun getManga(mangaId: String) : Flow<Result<MangaDetailsWithCover>>
 }

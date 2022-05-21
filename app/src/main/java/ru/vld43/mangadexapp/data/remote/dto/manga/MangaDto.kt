@@ -9,10 +9,10 @@ private const val NONE = "none"
 private const val UNTITLED = "untitled"
 
 data class MangaDto(
-    @SerializedName("id") val id: String?,
-    @SerializedName("type") val type: String?,
-    @SerializedName("attributes") val attributes: MangaAttributes?,
-    @SerializedName("relationships") val relationships: List<Relationship>?,
+    @SerializedName("id") val id: String? = null,
+    @SerializedName("type") val type: String? = null,
+    @SerializedName("attributes") val attributes: MangaAttributes? = null,
+    @SerializedName("relationships") val relationships: List<Relationship>? = null,
 )
 
 fun MangaDto.toManga(): Manga =
@@ -41,6 +41,9 @@ fun MangaDto.toMangaDetails(): MangaDetails =
             ?: emptyList(),
         status = attributes?.status ?: NONE,
         contentRating = attributes?.contentRating ?: NONE,
-        lastChapter = if (attributes?.lastChapter ?: "-" == "") "-"
-        else attributes?.lastChapter ?: "-"
+        lastChapter = if (attributes?.lastChapter.isNullOrEmpty()) {
+            "-"
+        } else {
+            attributes?.lastChapter ?: "-"
+        }
     )
