@@ -5,6 +5,4 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:listitem="@layout/item_chapter"
     tools:context=".ui.chapters.ChaptersFragment"
-    android:layout_marginHorizontal="16dp">
-
-</androidx.recyclerview.widget.RecyclerView>
+    android:layout_marginHorizontal="16dp"/>

@@ -14,17 +14,8 @@ object MangaDetailsWithCoverMapper {
 
     fun map(mangaDto: MangaByIdDto, mangaCover: CoverArtDto?): MangaDetailsWithCover {
         val id = mangaDto.manga?.id ?: ""
-        val title = mangaDto.manga?.attributes?.run {
-            altTitles
-                ?.mapNotNull { it.ru }
-                ?.firstOrNull()
-                ?: title?.en
-        } ?: UNTITLED
-
-        val description = mangaDto.manga?.attributes?.description?.ru
-            ?: mangaDto.manga?.attributes?.description?.en
-            ?: NONE
-
+        val title = mangaDto.manga?.attributes?.title?.en ?: UNTITLED
+        val description = mangaDto.manga?.attributes?.description?.en ?: NONE
         val tags = mangaDto.manga?.attributes?.tags
             ?.mapNotNull { it.attributes?.name?.ru ?: it.attributes?.name?.en }
             ?: emptyList()
