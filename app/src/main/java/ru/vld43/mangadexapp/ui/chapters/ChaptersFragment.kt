@@ -1,22 +1,30 @@
 package ru.vld43.mangadexapp.ui.chapters
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.navArgs
+import ru.vld43.mangadexapp.R
 import ru.vld43.mangadexapp.databinding.FragmentChaptersBinding
-import ru.vld43.mangadexapp.databinding.FragmentMangaDetailsBinding
+import ru.vld43.mangadexapp.ui.MainActivity
+import javax.inject.Inject
 
-class ChaptersFragment: Fragment() {
+class ChaptersFragment: Fragment(R.layout.fragment_chapters) {
+
+    private val arguments: ChaptersFragmentArgs by navArgs()
+
+    @Inject
+    lateinit var viewModelFactory: ChaptersViewModelFactory
+    private val viewModel by viewModels<ChaptersViewModel> { viewModelFactory }
 
     private lateinit var binding: FragmentChaptersBinding
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        binding = FragmentChaptersBinding.inflate(layoutInflater, container, false)
-        return binding.root
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        MainActivity.appComponent.inject(this)
+
+        binding = FragmentChaptersBinding.bind(view)
     }
 }

@@ -32,4 +32,8 @@ class MangaDetailsViewModel(
                 }
         }
     }
+
+    fun openChapters(mangaId: String) {
+        appNavigator.navigateToChapters(mangaId)
+    }
 }
