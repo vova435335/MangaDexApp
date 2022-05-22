@@ -1,4 +1,4 @@
-package ru.vld43.mangadexapp.data.remote.dto
+package ru.vld43.mangadexapp.data.remote.response
 
 import com.google.gson.annotations.SerializedName
 

@@ -14,10 +14,10 @@ import ru.vld43.mangadexapp.common.data.models.Result
 import ru.vld43.mangadexapp.data.paging.MangaListPagerLoader
 import ru.vld43.mangadexapp.data.paging.MangaPagingSource
 import ru.vld43.mangadexapp.data.remote.MangaDexApi
-import ru.vld43.mangadexapp.data.remote.dto.mappers.MangaByIdDtoToMangaCoverIdMapper
-import ru.vld43.mangadexapp.data.remote.dto.mappers.MangaDetailsWithCoverMapper
-import ru.vld43.mangadexapp.data.remote.dto.mappers.MangaDtoToMangaCoverIdMapper
-import ru.vld43.mangadexapp.data.remote.dto.mappers.MangaWithCoverMapper
+import ru.vld43.mangadexapp.data.remote.response.mappers.MangaByIdDtoToMangaCoverIdMapper
+import ru.vld43.mangadexapp.data.remote.response.mappers.MangaDetailsWithCoverMapper
+import ru.vld43.mangadexapp.data.remote.response.mappers.MangaDtoToMangaCoverIdMapper
+import ru.vld43.mangadexapp.data.remote.response.mappers.MangaWithCoverMapper
 import ru.vld43.mangadexapp.domain.models.MangaDetailsWithCover
 import ru.vld43.mangadexapp.domain.models.MangaWithCover
 import ru.vld43.mangadexapp.domain.repository.MangaRepository
