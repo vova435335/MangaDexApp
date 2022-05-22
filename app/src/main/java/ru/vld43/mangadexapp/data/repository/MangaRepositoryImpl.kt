@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
+import retrofit2.HttpException
 import ru.vld43.mangadexapp.common.Constants.COVER_ART_URL
 import ru.vld43.mangadexapp.common.data.extansions.map
 import ru.vld43.mangadexapp.common.data.extansions.toResult
@@ -20,6 +21,7 @@ import ru.vld43.mangadexapp.data.remote.dto.mappers.MangaDetailsWithCoverMapper
 import ru.vld43.mangadexapp.domain.models.MangaDetailsWithCover
 import ru.vld43.mangadexapp.domain.models.MangaWithCover
 import ru.vld43.mangadexapp.domain.repository.MangaRepository
+import java.io.IOException
 import javax.inject.Inject
 
 class MangaRepositoryImpl @Inject constructor(
@@ -64,19 +66,25 @@ class MangaRepositoryImpl @Inject constructor(
     }
 
     override fun getManga(mangaId: String): Flow<Result<MangaDetailsWithCover>> = flow {
-        when (val manga = mangaDexApi.getManga(mangaId).toResult()) {
-            is Result.Success -> {
-                val mangaCover = mangaDexApi.getCoverArt(
-                    MangaByIdDtoToMangaCoverIdMapper.map(manga.data)
-                ).body()
+        try {
+            when (val manga = mangaDexApi.getManga(mangaId).toResult()) {
+                is Result.Success -> {
+                    val mangaCover = mangaDexApi.getCoverArt(
+                        MangaByIdDtoToMangaCoverIdMapper.map(manga.data)
+                    ).body()
 
-                val domainModel = manga.map(ifSuccess = {
-                    MangaDetailsWithCoverMapper.map(manga.data, mangaCover)
-                })
+                    val domainModel = manga.map(ifSuccess = {
+                        MangaDetailsWithCoverMapper.map(manga.data, mangaCover)
+                    })
 
-                emit(domainModel)
+                    emit(domainModel)
+                }
+                else -> emit(manga.map(ifError = { "An unexpected error occurred" }))
             }
-            else -> emit(manga.map(ifError = { "Ошибка сети!" }))
+        } catch (e: HttpException) {
+            emit(Result.Error(e.localizedMessage ?: "An unexpected error occurred"))
+        } catch (e: IOException) {
+            emit(Result.Error("Couldn't reach server. Check your internet connection."))
         }
     }
 
