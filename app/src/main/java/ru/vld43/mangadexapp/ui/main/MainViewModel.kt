@@ -1,6 +1,5 @@
 package ru.vld43.mangadexapp.ui.main
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -25,16 +24,11 @@ class MainViewModel(
         MutableStateFlow<PagingData<MangaWithCover>>(PagingData.empty())
 
     fun loadManga() {
-        var x: Int? = null
         viewModelScope.launch {
             getMangaListUseCase()
                 .cachedIn(viewModelScope)
-                .collect {
-                    x = 3
-                    mutableMangaListState.emit(it)
-                }
+                .collect (mutableMangaListState::emit)
         }
-        Log.d("TAG", "loadManga: $x")
     }
 
     fun searchManga(title: String) {

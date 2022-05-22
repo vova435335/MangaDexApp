@@ -14,6 +14,7 @@ import ru.vld43.mangadexapp.common.extensions.observe
 import ru.vld43.mangadexapp.databinding.FragmentMangaDetailsBinding
 import ru.vld43.mangadexapp.domain.models.MangaDetailsWithCover
 import ru.vld43.mangadexapp.ui.MainActivity
+import ru.vld43.mangadexapp.ui.states.LoadMangaState
 import javax.inject.Inject
 
 class MangaDetailsFragment : Fragment() {
@@ -49,7 +50,11 @@ class MangaDetailsFragment : Fragment() {
 
     private fun observeViewModel() {
         viewModel.mangaState.observe(this) {
-            initViews(it)
+            when (it) {
+                LoadMangaState.Loading -> {}
+                is LoadMangaState.Success<*> -> initViews(it.data as MangaDetailsWithCover)
+                is LoadMangaState.Error -> Log.d("TAG", "observeViewModel: ${it.message}")
+            }
         }
     }
 
@@ -72,5 +77,4 @@ class MangaDetailsFragment : Fragment() {
             detailsLastChapterValueTv.text = manga.lastChapter
         }
     }
-
 }
