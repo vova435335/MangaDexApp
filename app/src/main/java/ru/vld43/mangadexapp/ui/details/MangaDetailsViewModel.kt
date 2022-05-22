@@ -27,7 +27,7 @@ class MangaDetailsViewModel(
                 .collect {
                     when (it) {
                         is Result.Success -> mutableMangaState.emit(LoadMangaState.Success(it.data))
-                        is Result.Error -> mutableMangaState.value = LoadMangaState.Error(it.error)
+                        is Result.Error -> mutableMangaState.emit(LoadMangaState.Error(it.error))
                     }
                 }
         }
