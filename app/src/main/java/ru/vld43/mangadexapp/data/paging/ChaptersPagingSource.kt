@@ -7,7 +7,7 @@ import java.lang.Exception
 
 typealias ChapterPageLoader = suspend (pageIndex: Int, pageSize: Int) -> List<Chapter>
 
-class CoversPagingSource(
+class ChaptersPagingSource(
     private val loader: ChapterPageLoader,
 ) : PagingSource<Int, Chapter>() {
 

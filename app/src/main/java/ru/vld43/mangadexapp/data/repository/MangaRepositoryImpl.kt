@@ -11,20 +11,21 @@ import retrofit2.HttpException
 import ru.vld43.mangadexapp.common.data.extansions.map
 import ru.vld43.mangadexapp.common.data.extansions.toResult
 import ru.vld43.mangadexapp.common.data.models.Result
+import ru.vld43.mangadexapp.data.paging.ChapterPageLoader
+import ru.vld43.mangadexapp.data.paging.ChaptersPagingSource
 import ru.vld43.mangadexapp.data.paging.MangaListPagerLoader
 import ru.vld43.mangadexapp.data.paging.MangaPagingSource
 import ru.vld43.mangadexapp.data.remote.MangaDexApi
-import ru.vld43.mangadexapp.data.remote.response.mappers.MangaByIdDtoToMangaCoverIdMapper
-import ru.vld43.mangadexapp.data.remote.response.mappers.MangaDetailsWithCoverMapper
-import ru.vld43.mangadexapp.data.remote.response.mappers.MangaDtoToMangaCoverIdMapper
-import ru.vld43.mangadexapp.data.remote.response.mappers.MangaWithCoverMapper
+import ru.vld43.mangadexapp.data.remote.response.mappers.*
+import ru.vld43.mangadexapp.domain.models.Chapter
 import ru.vld43.mangadexapp.domain.models.MangaDetailsWithCover
 import ru.vld43.mangadexapp.domain.models.MangaWithCover
 import ru.vld43.mangadexapp.domain.repository.MangaRepository
 import java.io.IOException
 import javax.inject.Inject
 
-private const val PAGE_SIZE = 15
+private const val MANGA_PAGE_SIZE = 15
+private const val CHAPTERS_PAGE_SIZE = 30
 
 private const val UNEXPECTED_ERROR_MESSAGE = "An unexpected error occurred"
 private const val INTERNET_CONNECTION_ERROR_MESSAGE =
@@ -41,7 +42,7 @@ class MangaRepositoryImpl @Inject constructor(
 
         return Pager(
             config = PagingConfig(
-                pageSize = PAGE_SIZE,
+                pageSize = MANGA_PAGE_SIZE,
                 enablePlaceholders = false
             ),
             pagingSourceFactory = { MangaPagingSource(loader) }
@@ -59,7 +60,7 @@ class MangaRepositoryImpl @Inject constructor(
 
         return Pager(
             config = PagingConfig(
-                pageSize = PAGE_SIZE,
+                pageSize = MANGA_PAGE_SIZE,
                 enablePlaceholders = false
             ),
             pagingSourceFactory = { MangaPagingSource(loader) }
@@ -87,6 +88,20 @@ class MangaRepositoryImpl @Inject constructor(
         } catch (e: IOException) {
             emit(Result.Error(INTERNET_CONNECTION_ERROR_MESSAGE))
         }
+    }
+
+    override fun getPagingChapters(mangaId: String): Flow<PagingData<Chapter>> {
+        val loader: ChapterPageLoader = { pageSize, pageIndex ->
+            getChapters(pageSize, pageIndex, mangaId)
+        }
+
+        return Pager(
+            config = PagingConfig(
+                pageSize = CHAPTERS_PAGE_SIZE,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { ChaptersPagingSource(loader) }
+        ).flow
     }
 
     private suspend fun getMangaList(pageSize: Int, pageIndex: Int): List<MangaWithCover> =
@@ -121,6 +136,21 @@ class MangaRepositoryImpl @Inject constructor(
                 ).body()
 
                 MangaWithCoverMapper.map(it, mangaCover)
+            } ?: emptyList()
+    }
+
+    private suspend fun getChapters(
+        pageSize: Int,
+        pageIndex: Int,
+        mangaId: String,
+    ): List<Chapter> = withContext(Dispatchers.IO) {
+        val offset = pageSize * pageIndex
+
+        mangaDexApi.getChapters(mangaId, pageSize, offset)
+            .body()
+            ?.data
+            ?.map {
+                ChapterMapper.map(it)
             } ?: emptyList()
     }
 }

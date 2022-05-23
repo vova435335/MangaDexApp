@@ -47,6 +47,8 @@ interface MangaDexApi {
     @GET(GET_CHAPTERS)
     suspend fun getChapters(
         @Query(QUERY_CHAPTERS_MANGA_ID_KEY) mangaId: String,
+        @Query(QUERY_LIMIT_KEY) limit: Int,
+        @Query(QUERY_OFFSET_KEY) offset: Int,
         @Query(QUERY_CHAPTERS_LANGUAGE_KEY) language: String = "ru"
     ): Response<ChaptersResponse>
 }
