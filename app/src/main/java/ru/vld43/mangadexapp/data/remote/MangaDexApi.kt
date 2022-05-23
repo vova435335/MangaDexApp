@@ -8,8 +8,9 @@ import ru.vld43.mangadexapp.common.Constants.GET_CHAPTERS
 import ru.vld43.mangadexapp.common.Constants.GET_COVER_ART
 import ru.vld43.mangadexapp.common.Constants.GET_MANGA
 import ru.vld43.mangadexapp.common.Constants.GET_MANGA_LIST
+import ru.vld43.mangadexapp.common.Constants.QUERY_CHAPTERS_LANGUAGE_KEY
 import ru.vld43.mangadexapp.common.Constants.QUERY_LIMIT_KEY
-import ru.vld43.mangadexapp.common.Constants.QUERY_MANGA_KEY
+import ru.vld43.mangadexapp.common.Constants.QUERY_CHAPTERS_MANGA_ID_KEY
 import ru.vld43.mangadexapp.common.Constants.QUERY_OFFSET_KEY
 import ru.vld43.mangadexapp.common.Constants.QUERY_SEARCH_KEY_PARAMETER
 import ru.vld43.mangadexapp.common.Constants.SEARCH_MANGA
@@ -45,6 +46,7 @@ interface MangaDexApi {
 
     @GET(GET_CHAPTERS)
     suspend fun getChapters(
-        @Query(QUERY_MANGA_KEY) mangaId: String,
+        @Query(QUERY_CHAPTERS_MANGA_ID_KEY) mangaId: String,
+        @Query(QUERY_CHAPTERS_LANGUAGE_KEY) language: String = "ru"
     ): Response<ChaptersResponse>
 }
