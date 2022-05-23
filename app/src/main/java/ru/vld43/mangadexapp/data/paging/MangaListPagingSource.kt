@@ -3,11 +3,11 @@ package ru.vld43.mangadexapp.data.paging
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import ru.vld43.mangadexapp.domain.models.MangaWithCover
-import javax.inject.Inject
 
 typealias MangaListPagerLoader = suspend (pageSize: Int, pageIndex: Int) -> List<MangaWithCover>
 
-class MangaPagingSource @Inject constructor(
+@Suppress("UnnecessaryVariable")
+class MangaPagingSource (
     private val loader: MangaListPagerLoader,
 ) : PagingSource<Int, MangaWithCover>() {
 
@@ -26,7 +26,7 @@ class MangaPagingSource @Inject constructor(
             return LoadResult.Page(
                 data = mangaList,
                 prevKey = if (pageIndex == 0) null else pageIndex - 1,
-                nextKey = if (mangaList.size == params.loadSize) null else pageIndex + 1
+                nextKey = pageIndex + 1
             )
         } catch (e: Exception) {
             LoadResult.Error(throwable = e)

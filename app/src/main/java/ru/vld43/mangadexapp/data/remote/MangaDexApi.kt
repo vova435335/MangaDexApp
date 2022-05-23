@@ -25,7 +25,8 @@ interface MangaDexApi {
     suspend fun getMangaList(
         @Query(QUERY_LIMIT_KEY) limit: Int,
         @Query(QUERY_OFFSET_KEY) offset: Int,
-    ): Response<MangaListResponse>
+        @Query("availableTranslatedLanguage[]") language: String = "ru"
+        ): Response<MangaListResponse>
 
     @GET(GET_MANGA)
     suspend fun getManga(
@@ -49,6 +50,6 @@ interface MangaDexApi {
         @Query(QUERY_CHAPTERS_MANGA_ID_KEY) mangaId: String,
         @Query(QUERY_LIMIT_KEY) limit: Int,
         @Query(QUERY_OFFSET_KEY) offset: Int,
-        @Query(QUERY_CHAPTERS_LANGUAGE_KEY) language: String = "ru"
+        @Query(QUERY_CHAPTERS_LANGUAGE_KEY) language: String = "ru",
     ): Response<ChaptersResponse>
 }

@@ -1,5 +1,6 @@
 package ru.vld43.mangadexapp.data.repository
 
+import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -11,7 +12,7 @@ import retrofit2.HttpException
 import ru.vld43.mangadexapp.common.data.extansions.map
 import ru.vld43.mangadexapp.common.data.extansions.toResult
 import ru.vld43.mangadexapp.common.data.models.Result
-import ru.vld43.mangadexapp.data.paging.ChapterPageLoader
+import ru.vld43.mangadexapp.data.paging.ChaptersPageLoader
 import ru.vld43.mangadexapp.data.paging.ChaptersPagingSource
 import ru.vld43.mangadexapp.data.paging.MangaListPagerLoader
 import ru.vld43.mangadexapp.data.paging.MangaPagingSource
@@ -25,7 +26,7 @@ import java.io.IOException
 import javax.inject.Inject
 
 private const val MANGA_PAGE_SIZE = 15
-private const val CHAPTERS_PAGE_SIZE = 30
+private const val CHAPTERS_PAGE_SIZE = 15
 
 private const val UNEXPECTED_ERROR_MESSAGE = "An unexpected error occurred"
 private const val INTERNET_CONNECTION_ERROR_MESSAGE =
@@ -43,6 +44,7 @@ class MangaRepositoryImpl @Inject constructor(
         return Pager(
             config = PagingConfig(
                 pageSize = MANGA_PAGE_SIZE,
+                initialLoadSize = MANGA_PAGE_SIZE,
                 enablePlaceholders = false
             ),
             pagingSourceFactory = { MangaPagingSource(loader) }
@@ -91,14 +93,15 @@ class MangaRepositoryImpl @Inject constructor(
     }
 
     override fun getPagingChapters(mangaId: String): Flow<PagingData<Chapter>> {
-        val loader: ChapterPageLoader = { pageSize, pageIndex ->
+        val loader: ChaptersPageLoader = { pageSize, pageIndex ->
             getChapters(pageSize, pageIndex, mangaId)
         }
 
         return Pager(
             config = PagingConfig(
                 pageSize = CHAPTERS_PAGE_SIZE,
-                enablePlaceholders = false
+                initialLoadSize = CHAPTERS_PAGE_SIZE,
+                enablePlaceholders = false,
             ),
             pagingSourceFactory = { ChaptersPagingSource(loader) }
         ).flow
@@ -108,7 +111,7 @@ class MangaRepositoryImpl @Inject constructor(
         withContext(Dispatchers.IO) {
             val offset = pageSize * pageIndex
 
-            mangaDexApi.getMangaList(pageSize, offset)
+            mangaDexApi.getMangaList(pageIndex, offset)
                 .body()
                 ?.mangaList
                 ?.map {
@@ -145,8 +148,9 @@ class MangaRepositoryImpl @Inject constructor(
         mangaId: String,
     ): List<Chapter> = withContext(Dispatchers.IO) {
         val offset = pageSize * pageIndex
+        Log.d("TAG", "getChapters: $pageIndex, $offset")
 
-        mangaDexApi.getChapters(mangaId, pageSize, offset)
+        mangaDexApi.getChapters(mangaId, pageIndex, offset)
             .body()
             ?.data
             ?.map {

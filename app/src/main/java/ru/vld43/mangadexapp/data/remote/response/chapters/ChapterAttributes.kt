@@ -11,8 +11,4 @@ data class ChapterAttributes(
     @SerializedName("uploader") val uploader: String?,
     @SerializedName("externalUrl") val externalUrl: String?,
     @SerializedName("version") val version: Int?,
-    @SerializedName("createdAt") val createdAt: Int?,
-    @SerializedName("updatedAt") val updatedAt: Int?,
-    @SerializedName("publishAt") val publishAt: Int?,
-    @SerializedName("readableAt") val readableAt: Int?,
 )
