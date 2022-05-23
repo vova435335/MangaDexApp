@@ -4,13 +4,16 @@ import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
+import ru.vld43.mangadexapp.common.Constants.GET_CHAPTERS
 import ru.vld43.mangadexapp.common.Constants.GET_COVER_ART
 import ru.vld43.mangadexapp.common.Constants.GET_MANGA
 import ru.vld43.mangadexapp.common.Constants.GET_MANGA_LIST
 import ru.vld43.mangadexapp.common.Constants.QUERY_LIMIT_KEY
+import ru.vld43.mangadexapp.common.Constants.QUERY_MANGA_KEY
 import ru.vld43.mangadexapp.common.Constants.QUERY_OFFSET_KEY
 import ru.vld43.mangadexapp.common.Constants.QUERY_SEARCH_KEY_PARAMETER
 import ru.vld43.mangadexapp.common.Constants.SEARCH_MANGA
+import ru.vld43.mangadexapp.data.remote.response.chapters.ChaptersResponse
 import ru.vld43.mangadexapp.data.remote.response.cover_art.CoverArtResponse
 import ru.vld43.mangadexapp.data.remote.response.manga.MangaByIdResponse
 import ru.vld43.mangadexapp.data.remote.response.manga.MangaListResponse
@@ -39,4 +42,9 @@ interface MangaDexApi {
         @Query(QUERY_LIMIT_KEY) limit: Int,
         @Query(QUERY_OFFSET_KEY) offset: Int,
     ): Response<MangaListResponse>
+
+    @GET(GET_CHAPTERS)
+    suspend fun getChapters(
+        @Query(QUERY_MANGA_KEY) mangaId: String,
+    ): Response<ChaptersResponse>
 }
