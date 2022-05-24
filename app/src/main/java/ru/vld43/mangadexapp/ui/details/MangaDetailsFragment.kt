@@ -42,6 +42,10 @@ class MangaDetailsFragment : Fragment() {
 
         observeViewModel()
         initData(arguments.mangaId)
+
+        binding.readMangaButton.setOnClickListener {
+            viewModel.openChapters(arguments.mangaId)
+        }
     }
 
     private fun initData(mangaId: String) {

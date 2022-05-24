@@ -1,4 +1,4 @@
-package ru.vld43.mangadexapp.ui.main.adapters
+package ru.vld43.mangadexapp.ui.main
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,7 +10,7 @@ import ru.vld43.mangadexapp.R
 import ru.vld43.mangadexapp.databinding.ItemMangaBinding
 import ru.vld43.mangadexapp.domain.models.MangaWithCover
 
-class MangaAdapter(private val onClickListener: (MangaWithCover) -> Unit) :
+class MangaAdapter(private val onClickListener: (String) -> Unit) :
     PagingDataAdapter<MangaWithCover, MangaAdapter.MangaViewHolder>(MangaItemCallback) {
 
     object MangaItemCallback : DiffUtil.ItemCallback<MangaWithCover>() {
@@ -42,7 +42,7 @@ class MangaAdapter(private val onClickListener: (MangaWithCover) -> Unit) :
         holder.binding.mangaTitleTv.text = itemManga.title
 
         holder.binding.root.setOnClickListener {
-            onClickListener(itemManga)
+            onClickListener(itemManga.id)
         }
     }
 

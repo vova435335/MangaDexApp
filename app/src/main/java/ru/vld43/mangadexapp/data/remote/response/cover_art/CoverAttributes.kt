@@ -1,4 +1,4 @@
-package ru.vld43.mangadexapp.data.remote.dto.cover_art
+package ru.vld43.mangadexapp.data.remote.response.cover_art
 
 import com.google.gson.annotations.SerializedName
 

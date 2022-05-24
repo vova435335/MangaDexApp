@@ -1,11 +1,11 @@
-package ru.vld43.mangadexapp.data.remote.dto.manga
+package ru.vld43.mangadexapp.data.remote.response.cover_art
 
 import com.google.gson.annotations.SerializedName
-import ru.vld43.mangadexapp.data.remote.dto.Relationship
+import ru.vld43.mangadexapp.data.remote.response.Relationship
 
-data class Tag(
+data class DataCover(
     @SerializedName("id") val id: String?,
     @SerializedName("type") val type: String?,
-    @SerializedName("attributes") val attributes: TagAttributes?,
+    @SerializedName("attributes") val attributes: CoverAttributes?,
     @SerializedName("relationships") val relationships: List<Relationship>?
 )

@@ -15,4 +15,8 @@ object Constants {
 
     const val SEARCH_MANGA = "/manga"
     const val QUERY_SEARCH_KEY_PARAMETER = "title"
+
+    const val GET_CHAPTERS = "/chapter"
+    const val QUERY_CHAPTERS_MANGA_ID_KEY = "manga"
+    const val QUERY_CHAPTERS_LANGUAGE_KEY = "translatedLanguage[]"
 }

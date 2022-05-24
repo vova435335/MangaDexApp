@@ -1,22 +1,22 @@
-package ru.vld43.mangadexapp.ui.details
+package ru.vld43.mangadexapp.ui.chapters
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import ru.vld43.mangadexapp.domain.use_cases.GetMangaUseCase
+import ru.vld43.mangadexapp.domain.use_cases.GetChaptersUseCase
 import ru.vld43.mangadexapp.ui.navigation.AppNavigator
 import javax.inject.Inject
 
-class MangaDetailsViewModelFactory @Inject constructor(
-    private val getMangaUseCase: GetMangaUseCase,
+class ChaptersViewModelFactory @Inject constructor(
+    private val getChaptersUseCase: GetChaptersUseCase,
     private val appNavigator: AppNavigator,
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T =
         modelClass.getConstructor(
-            GetMangaUseCase::class.java,
+            GetChaptersUseCase::class.java,
             AppNavigator::class.java
         ).newInstance(
-            getMangaUseCase,
+            getChaptersUseCase,
             appNavigator
         )
 }

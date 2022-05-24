@@ -7,8 +7,8 @@ import androidx.paging.cachedIn
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import ru.vld43.mangadexapp.domain.models.MangaWithCover
-import ru.vld43.mangadexapp.domain.use_case.GetMangaListUseCase
-import ru.vld43.mangadexapp.domain.use_case.SearchMangaUseCase
+import ru.vld43.mangadexapp.domain.use_cases.GetMangaListUseCase
+import ru.vld43.mangadexapp.domain.use_cases.SearchMangaUseCase
 import ru.vld43.mangadexapp.ui.navigation.AppNavigator
 
 class MainViewModel(
@@ -39,7 +39,7 @@ class MainViewModel(
         }
     }
 
-    fun openDetails(mangaWithCover: MangaWithCover) {
-        appNavigator.navigateToMangaDetails(mangaWithCover.id)
+    fun openDetails(mangaId: String) {
+        appNavigator.navigateToMangaDetails(mangaId)
     }
 }

@@ -15,7 +15,6 @@ import ru.vld43.mangadexapp.R
 import ru.vld43.mangadexapp.common.extensions.observe
 import ru.vld43.mangadexapp.databinding.FragmentMainBinding
 import ru.vld43.mangadexapp.ui.MainActivity
-import ru.vld43.mangadexapp.ui.main.adapters.MangaAdapter
 import javax.inject.Inject
 
 private const val SPAN_COUNT = 3
@@ -61,6 +60,7 @@ class MainFragment : Fragment() {
         binding.mangaListRv.adapter = mangaAdapter
         binding.mangaListRv.layoutManager = GridLayoutManager(requireContext(), SPAN_COUNT)
         mangaAdapter.addLoadStateListener {
+
             when (it.refresh) {
                 LoadState.Loading -> {
                     binding.mangaSrl.isRefreshing = true

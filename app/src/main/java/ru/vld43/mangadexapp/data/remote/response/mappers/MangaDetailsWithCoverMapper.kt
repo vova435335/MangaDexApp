@@ -1,8 +1,8 @@
-package ru.vld43.mangadexapp.data.remote.dto.mappers
+package ru.vld43.mangadexapp.data.remote.response.mappers
 
 import ru.vld43.mangadexapp.common.Constants
-import ru.vld43.mangadexapp.data.remote.dto.cover_art.CoverArtDto
-import ru.vld43.mangadexapp.data.remote.dto.manga.MangaByIdDto
+import ru.vld43.mangadexapp.data.remote.response.cover_art.CoverArtResponse
+import ru.vld43.mangadexapp.data.remote.response.manga.MangaByIdResponse
 import ru.vld43.mangadexapp.domain.models.MangaDetailsWithCover
 
 private const val NONE = "none"
@@ -12,15 +12,15 @@ const val IMAGE_SIZE = ".512.jpg"
 
 object MangaDetailsWithCoverMapper {
 
-    fun map(mangaDto: MangaByIdDto, mangaCover: CoverArtDto?): MangaDetailsWithCover {
-        val id = mangaDto.manga?.id ?: ""
-        val title = mangaDto.manga?.attributes?.title?.en ?: UNTITLED
-        val description = mangaDto.manga?.attributes?.description?.en ?: NONE
-        val tags = mangaDto.manga?.attributes?.tags
+    fun map(mangaResponse: MangaByIdResponse, mangaCover: CoverArtResponse?): MangaDetailsWithCover {
+        val id = mangaResponse.manga?.id ?: ""
+        val title = mangaResponse.manga?.attributes?.title?.en ?: UNTITLED
+        val description = mangaResponse.manga?.attributes?.description?.en ?: NONE
+        val tags = mangaResponse.manga?.attributes?.tags
             ?.mapNotNull { it.attributes?.name?.ru ?: it.attributes?.name?.en }
             ?: emptyList()
 
-        val lastChapter = mangaDto.manga?.attributes?.lastChapter
+        val lastChapter = mangaResponse.manga?.attributes?.lastChapter
         val coverUrl = createCoverUrl(id, mangaCover?.data?.attributes?.fileName ?: "")
 
         return MangaDetailsWithCover(
@@ -28,8 +28,8 @@ object MangaDetailsWithCoverMapper {
             title = title,
             description = description,
             tags = tags,
-            status = mangaDto.manga?.attributes?.status ?: NONE,
-            contentRating = mangaDto.manga?.attributes?.contentRating ?: NONE,
+            status = mangaResponse.manga?.attributes?.status ?: NONE,
+            contentRating = mangaResponse.manga?.attributes?.contentRating ?: NONE,
             lastChapter = lastChapter,
             coverUrl = coverUrl
         )
