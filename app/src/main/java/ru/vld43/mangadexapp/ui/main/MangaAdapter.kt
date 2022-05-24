@@ -1,4 +1,4 @@
-package ru.vld43.mangadexapp.ui.main.adapters
+package ru.vld43.mangadexapp.ui.main
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

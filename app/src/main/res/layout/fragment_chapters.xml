@@ -7,11 +7,11 @@
     tools:context=".ui.chapters.ChaptersFragment">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:layout_marginTop="8dp"
-        android:clipToPadding="false"
         android:id="@+id/chapter_srl"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:clipToPadding="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,7 +21,17 @@
             android:id="@+id/chapters_rv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:listitem="@layout/item_chapter"
-            tools:itemCount="20"/>
+            tools:itemCount="20"
+            tools:listitem="@layout/item_chapter" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <include
+        android:visibility="gone"
+        android:id="@+id/chapters_not_found"
+        layout="@layout/layout_not_found" />
+
+    <include
+        android:visibility="gone"
+        android:id="@+id/chapters_query_error"
+        layout="@layout/layout_query_error" />
 </androidx.constraintlayout.widget.ConstraintLayout>

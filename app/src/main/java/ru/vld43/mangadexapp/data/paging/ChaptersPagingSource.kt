@@ -1,12 +1,10 @@
 package ru.vld43.mangadexapp.data.paging
 
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import ru.vld43.mangadexapp.domain.models.Chapter
-import java.lang.Exception
 
-typealias ChaptersPageLoader = suspend (pageSize: Int, pageIndex: Int) -> List<Chapter>
+typealias ChaptersPageLoader = suspend (pageIndex: Int, pageSize: Int) -> List<Chapter>
 
 class ChaptersPagingSource(
     private val loader: ChaptersPageLoader,
@@ -24,8 +22,6 @@ class ChaptersPagingSource(
 
         return try {
             val chapters = loader(pageIndex, params.loadSize)
-            Log.d("TAG", "${chapters.size}")
-            Log.d("TAG", "$pageIndex, $pageSize")
 
             return LoadResult.Page(
                 data = chapters,
@@ -33,7 +29,6 @@ class ChaptersPagingSource(
                 nextKey = if(chapters.size < pageSize) null else pageIndex + 1
             )
         } catch (e: Exception) {
-            Log.d("TAG", "load: ERROR")
             LoadResult.Error(throwable = e)
         }
     }

@@ -6,7 +6,6 @@ import ru.vld43.mangadexapp.domain.models.MangaWithCover
 
 typealias MangaListPagerLoader = suspend (pageSize: Int, pageIndex: Int) -> List<MangaWithCover>
 
-@Suppress("UnnecessaryVariable")
 class MangaPagingSource (
     private val loader: MangaListPagerLoader,
 ) : PagingSource<Int, MangaWithCover>() {

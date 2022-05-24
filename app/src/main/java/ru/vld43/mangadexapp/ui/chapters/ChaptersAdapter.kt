@@ -1,6 +1,5 @@
-package ru.vld43.mangadexapp.ui.chapters.adapters
+package ru.vld43.mangadexapp.ui.chapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
@@ -23,8 +22,6 @@ class ChaptersAdapter :
 
     override fun onBindViewHolder(holder: ChapterViewHolder, position: Int) {
         val itemChapter = getItem(position) ?: return
-
-        Log.d("TAG", "onBindViewHolder: $itemChapter")
 
         holder.binding.chapterTitleTv.text = itemChapter.title
     }

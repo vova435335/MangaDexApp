@@ -1,6 +1,5 @@
 package ru.vld43.mangadexapp.data.repository
 
-import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -26,7 +25,7 @@ import java.io.IOException
 import javax.inject.Inject
 
 private const val MANGA_PAGE_SIZE = 15
-private const val CHAPTERS_PAGE_SIZE = 15
+private const val CHAPTERS_PAGE_SIZE = 20
 
 private const val UNEXPECTED_ERROR_MESSAGE = "An unexpected error occurred"
 private const val INTERNET_CONNECTION_ERROR_MESSAGE =
@@ -93,8 +92,8 @@ class MangaRepositoryImpl @Inject constructor(
     }
 
     override fun getPagingChapters(mangaId: String): Flow<PagingData<Chapter>> {
-        val loader: ChaptersPageLoader = { pageSize, pageIndex ->
-            getChapters(pageSize, pageIndex, mangaId)
+        val loader: ChaptersPageLoader = { pageIndex, pageSize ->
+            getChapters(pageIndex, pageSize, mangaId)
         }
 
         return Pager(
@@ -143,14 +142,13 @@ class MangaRepositoryImpl @Inject constructor(
     }
 
     private suspend fun getChapters(
-        pageSize: Int,
         pageIndex: Int,
+        pageSize: Int,
         mangaId: String,
     ): List<Chapter> = withContext(Dispatchers.IO) {
         val offset = pageSize * pageIndex
-        Log.d("TAG", "getChapters: $pageIndex, $offset")
 
-        mangaDexApi.getChapters(mangaId, pageIndex, offset)
+        mangaDexApi.getChapters(mangaId, pageSize, offset)
             .body()
             ?.data
             ?.map {

@@ -1,10 +1,10 @@
 package ru.vld43.mangadexapp.data.remote.response.mappers
 
-import android.util.Log
 import ru.vld43.mangadexapp.data.remote.response.chapters.ChapterResponse
 import ru.vld43.mangadexapp.domain.models.Chapter
 
-private const val UNTITLED = "untitled"
+private const val UNTITLED = "Без названия"
+private const val CHAPTER = "Глава"
 
 object ChapterMapper {
 
@@ -14,7 +14,7 @@ object ChapterMapper {
 
         return Chapter(
             id = chapter.id ?: "",
-            title = "$title $numberChapter"
+            title = "$CHAPTER $numberChapter: $title"
         )
     }
 }
