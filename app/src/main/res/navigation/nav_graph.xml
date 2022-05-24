@@ -12,7 +12,9 @@
         tools:layout="@layout/fragment_main">
         <action
             android:id="@+id/action_mainFragment_to_mangaDetailsFragment"
-            app:destination="@id/mangaDetailsFragment" />
+            app:destination="@id/mangaDetailsFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
     </fragment>
 
     <fragment
@@ -43,5 +45,7 @@
         android:id="@+id/readMangaFragment"
         android:name="ru.vld43.mangadexapp.ui.read_manga.ReadMangaFragment"
         android:label="fragment_read_manga"
-        tools:layout="@layout/fragment_read_manga" />
+        tools:layout="@layout/fragment_read_manga" >
+        <argument android:name="chapter_id" />
+    </fragment>
 </navigation>

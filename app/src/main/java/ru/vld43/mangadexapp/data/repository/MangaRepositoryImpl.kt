@@ -11,10 +11,7 @@ import retrofit2.HttpException
 import ru.vld43.mangadexapp.common.data.extansions.map
 import ru.vld43.mangadexapp.common.data.extansions.toResult
 import ru.vld43.mangadexapp.common.data.models.Result
-import ru.vld43.mangadexapp.data.paging.ChaptersPageLoader
-import ru.vld43.mangadexapp.data.paging.ChaptersPagingSource
-import ru.vld43.mangadexapp.data.paging.MangaListPagerLoader
-import ru.vld43.mangadexapp.data.paging.MangaPagingSource
+import ru.vld43.mangadexapp.data.paging.*
 import ru.vld43.mangadexapp.data.remote.MangaDexApi
 import ru.vld43.mangadexapp.data.remote.response.mappers.*
 import ru.vld43.mangadexapp.domain.models.Chapter
@@ -26,6 +23,7 @@ import javax.inject.Inject
 
 private const val MANGA_PAGE_SIZE = 15
 private const val CHAPTERS_PAGE_SIZE = 20
+private const val CHAPTER_PAGES_PAGE_SIZE = 3
 
 private const val UNEXPECTED_ERROR_MESSAGE = "An unexpected error occurred"
 private const val INTERNET_CONNECTION_ERROR_MESSAGE =
@@ -106,6 +104,21 @@ class MangaRepositoryImpl @Inject constructor(
         ).flow
     }
 
+    override fun getPagingChapterPages(chapterId: String): Flow<PagingData<String>> {
+        val loader: ChapterPagesPageLoader = { pageIndex, pageSize ->
+            getChapterPages(pageIndex, pageSize, chapterId)
+        }
+
+        return Pager(
+            config = PagingConfig(
+                pageSize = CHAPTER_PAGES_PAGE_SIZE,
+                initialLoadSize = CHAPTER_PAGES_PAGE_SIZE,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { ChapterPagesPagingSource(loader) }
+        ).flow
+    }
+
     private suspend fun getMangaList(pageSize: Int, pageIndex: Int): List<MangaWithCover> =
         withContext(Dispatchers.IO) {
             val offset = pageSize * pageIndex
@@ -151,8 +164,26 @@ class MangaRepositoryImpl @Inject constructor(
         mangaDexApi.getChapters(mangaId, pageSize, offset)
             .body()
             ?.data
-            ?.map {
-                ChapterMapper.map(it)
-            } ?: emptyList()
+            ?.map(ChapterMapper::map)
+            ?: emptyList()
+    }
+
+    private suspend fun getChapterPages(
+        pageIndex: Int,
+        pageSize: Int,
+        chapterId: String,
+    ): List<String> = withContext(Dispatchers.IO) {
+        val offset = pageIndex * pageSize
+
+        mangaDexApi.getChapterPages(chapterId, pageSize, offset)
+            .body()
+            ?.run {
+                val baseUrl = baseUrl ?: ""
+                val hash = chapter?.hash ?: ""
+                chapter?.imageNames?.map {
+                    "$baseUrl/data/$hash/$it"
+                }
+            }
+            ?: emptyList()
     }
 }

@@ -16,4 +16,6 @@ interface MangaRepository {
     fun getManga(mangaId: String): Flow<Result<MangaDetailsWithCover>>
 
     fun getPagingChapters(mangaId: String): Flow<PagingData<Chapter>>
+
+    fun getPagingChapterPages(chapterId: String): Flow<PagingData<String>>
 }

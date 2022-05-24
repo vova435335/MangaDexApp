@@ -1,6 +1,6 @@
-package ru.vld43.mangadexapp.common
+package ru.vld43.mangadexapp.common.data
 
-object Constants {
+object UrlConstants {
 
     const val BASE_URL = "https://api.mangadex.org"
     const val COVER_ART_URL = "https://uploads.mangadex.org/covers"
@@ -19,4 +19,6 @@ object Constants {
     const val GET_CHAPTERS = "/chapter"
     const val QUERY_CHAPTERS_MANGA_ID_KEY = "manga"
     const val QUERY_CHAPTERS_LANGUAGE_KEY = "translatedLanguage[]"
+
+    const val GET_CHAPTER_PAGES = "/at-home/server/{id}"
 }

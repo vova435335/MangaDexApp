@@ -47,7 +47,7 @@ class ChaptersFragment : Fragment(R.layout.fragment_chapters) {
     }
 
     private fun initRecycler() {
-        chaptersAdapter = ChaptersAdapter()
+        chaptersAdapter = ChaptersAdapter(viewModel::openReadManga)
         binding.chaptersRv.apply {
             layoutManager = LinearLayoutManager(requireContext())
 
