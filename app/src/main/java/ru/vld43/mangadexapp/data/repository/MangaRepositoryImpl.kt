@@ -4,8 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import ru.vld43.mangadexapp.common.data.extansions.map
@@ -87,7 +86,7 @@ class MangaRepositoryImpl @Inject constructor(
         } catch (e: IOException) {
             emit(Result.Error(INTERNET_CONNECTION_ERROR_MESSAGE))
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
     override fun getPagingChapters(mangaId: String): Flow<PagingData<Chapter>> {
         val loader: ChaptersPageLoader = { pageIndex, pageSize ->
@@ -104,20 +103,22 @@ class MangaRepositoryImpl @Inject constructor(
         ).flow
     }
 
-    override fun getPagingChapterPages(chapterId: String): Flow<PagingData<String>> {
-        val loader: ChapterPagesPageLoader = { pageIndex, pageSize ->
-            getChapterPages(pageIndex, pageSize, chapterId)
+    override fun getChapterPages(chapterId: String): Flow<Result<List<String>>> = flow {
+        try {
+            when (val chapterPages = mangaDexApi.getChapterPages(chapterId).toResult()) {
+                is Result.Success -> {
+                    val domainModel = chapterPages.map(ifSuccess = { ChapterPagesMapper.map(it) })
+                    emit(domainModel)
+                }
+                else -> emit(chapterPages.map(ifError = { UNEXPECTED_ERROR_MESSAGE }))
+            }
+        } catch (e: HttpException) {
+            emit(Result.Error(e.localizedMessage ?: UNEXPECTED_ERROR_MESSAGE))
+        } catch (e: IOException) {
+            emit(Result.Error(INTERNET_CONNECTION_ERROR_MESSAGE))
         }
+    }.flowOn(Dispatchers.IO)
 
-        return Pager(
-            config = PagingConfig(
-                pageSize = CHAPTER_PAGES_PAGE_SIZE,
-                initialLoadSize = CHAPTER_PAGES_PAGE_SIZE,
-                enablePlaceholders = false
-            ),
-            pagingSourceFactory = { ChapterPagesPagingSource(loader) }
-        ).flow
-    }
 
     private suspend fun getMangaList(pageSize: Int, pageIndex: Int): List<MangaWithCover> =
         withContext(Dispatchers.IO) {
@@ -165,25 +166,6 @@ class MangaRepositoryImpl @Inject constructor(
             .body()
             ?.data
             ?.map(ChapterMapper::map)
-            ?: emptyList()
-    }
-
-    private suspend fun getChapterPages(
-        pageIndex: Int,
-        pageSize: Int,
-        chapterId: String,
-    ): List<String> = withContext(Dispatchers.IO) {
-        val offset = pageIndex * pageSize
-
-        mangaDexApi.getChapterPages(chapterId, pageSize, offset)
-            .body()
-            ?.run {
-                val baseUrl = baseUrl ?: ""
-                val hash = chapter?.hash ?: ""
-                chapter?.imageNames?.map {
-                    "$baseUrl/data/$hash/$it"
-                }
-            }
             ?: emptyList()
     }
 }

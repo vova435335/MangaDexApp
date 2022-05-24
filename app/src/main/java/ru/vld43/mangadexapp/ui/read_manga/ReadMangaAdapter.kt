@@ -5,13 +5,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import ru.vld43.mangadexapp.R
 import ru.vld43.mangadexapp.databinding.ItemReadMangaBinding
 
 class ReadMangaAdapter :
-    PagingDataAdapter<String, ReadMangaAdapter.ReadMangaViewHolder>(ChapterItemCallBack) {
+    ListAdapter<String, ReadMangaAdapter.ReadMangaViewHolder>(ChapterItemCallBack) {
 
     object ChapterItemCallBack : DiffUtil.ItemCallback<String>() {
 
@@ -22,10 +23,14 @@ class ReadMangaAdapter :
             oldItem == newItem
     }
 
-    override fun onBindViewHolder(holder: ReadMangaViewHolder, position: Int) {
-        val itemPageImage = getItem(position) ?: return
+    var chapterPages: List<String> = emptyList()
+        set(newValue) {
+            field = newValue
+            submitList(field)
+        }
 
-        Log.d("TAG", "onBindViewHolder: $itemPageImage")
+    override fun onBindViewHolder(holder: ReadMangaViewHolder, position: Int) {
+        val itemPageImage = chapterPages[position]
 
         Picasso.get()
             .load(itemPageImage)

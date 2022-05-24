@@ -58,7 +58,5 @@ interface MangaDexApi {
     @GET(GET_CHAPTER_PAGES)
     suspend fun getChapterPages(
         @Path("id") id: String,
-        @Query(QUERY_LIMIT_KEY) limit: Int,
-        @Query(QUERY_OFFSET_KEY) offset: Int,
     ): Response<ChapterPagesResponse>
 }

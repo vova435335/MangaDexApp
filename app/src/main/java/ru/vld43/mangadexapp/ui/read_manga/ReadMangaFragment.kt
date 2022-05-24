@@ -1,6 +1,7 @@
 package ru.vld43.mangadexapp.ui.read_manga
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -9,8 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import ru.vld43.mangadexapp.R
 import ru.vld43.mangadexapp.common.extensions.observe
 import ru.vld43.mangadexapp.databinding.FragmentReadMangaBinding
-import ru.vld43.mangadexapp.ui.DefaultLoadStateAdapter
 import ru.vld43.mangadexapp.ui.MainActivity
+import ru.vld43.mangadexapp.ui.states.LoadState
 import javax.inject.Inject
 
 class ReadMangaFragment : Fragment(R.layout.fragment_read_manga) {
@@ -41,10 +42,7 @@ class ReadMangaFragment : Fragment(R.layout.fragment_read_manga) {
         readMangaAdapter = ReadMangaAdapter()
         binding.readMangaRv.apply {
             layoutManager = LinearLayoutManager(requireContext())
-
-            adapter = readMangaAdapter.withLoadStateFooter(
-                footer = DefaultLoadStateAdapter { readMangaAdapter.retry() }
-            )
+            adapter = readMangaAdapter
         }
     }
 
@@ -54,7 +52,13 @@ class ReadMangaFragment : Fragment(R.layout.fragment_read_manga) {
 
     private fun observeViewModel() {
         viewModel.chapterPagesState.observe(this) {
-            readMangaAdapter.submitData(lifecycle, it)
+            when (it) {
+                is LoadState.Loading -> {}
+                is LoadState.Success -> {
+                    readMangaAdapter.chapterPages = it.data ?: emptyList()
+                }
+                is LoadState.Error -> Log.d("TAG", "observeViewModel: ${it.message}")
+            }
         }
     }
 }
