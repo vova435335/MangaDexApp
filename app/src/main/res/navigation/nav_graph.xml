@@ -35,5 +35,13 @@
         <argument
             android:name="mangaId"
             app:argType="string" />
+        <action
+            android:id="@+id/action_chaptersFragment_to_readMangaFragment"
+            app:destination="@id/readMangaFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/readMangaFragment"
+        android:name="ru.vld43.mangadexapp.ui.read_manga.ReadMangaFragment"
+        android:label="fragment_read_manga"
+        tools:layout="@layout/fragment_read_manga" />
 </navigation>

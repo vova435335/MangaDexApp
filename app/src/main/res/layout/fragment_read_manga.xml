@@ -4,34 +4,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.chapters.ChaptersFragment">
+    tools:context=".ui.read_manga.ReadMangaFragment">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/chapter_srl"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:clipToPadding="false"
+        android:id="@+id/read_manga_srl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/chapters_rv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:itemCount="20"
-            tools:listitem="@layout/item_chapter" />
+            android:id="@+id/read_manga_rv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:itemCount="5"
+            tools:listitem="@layout/item_read_manga" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <include
-        android:id="@+id/chapters_not_found"
+        android:id="@+id/read_manga_not_found"
         layout="@layout/layout_not_found"
         android:visibility="gone" />
 
     <include
-        android:id="@+id/chapters_query_error"
+        android:id="@+id/read_manga_query_error"
         layout="@layout/layout_query_error"
         android:visibility="gone" />
 </androidx.constraintlayout.widget.ConstraintLayout>
