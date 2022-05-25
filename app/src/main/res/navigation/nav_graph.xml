@@ -21,7 +21,7 @@
 
     <fragment
         android:id="@+id/mangaDetailsFragment"
-        android:name="ru.vld43.mangadexapp.ui.details.MangaDetailsFragment"
+        android:name="ru.vld43.mangadexapp.ui.manga_details.MangaDetailsFragment"
         android:label="fragment_manga_details"
         tools:layout="@layout/fragment_manga_details" >
         <argument

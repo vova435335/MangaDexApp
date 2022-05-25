@@ -1,4 +1,4 @@
-package ru.vld43.mangadexapp.ui.details
+package ru.vld43.mangadexapp.ui.manga_details
 
 import android.os.Bundle
 import android.util.Log
@@ -37,9 +37,16 @@ class MangaDetailsFragment : Fragment(R.layout.fragment_manga_details) {
 
         observeViewModel()
         initData(arguments.mangaId)
+        initRefresh(arguments.mangaId)
 
-        binding.readMangaButton.setOnClickListener {
+        binding.mangaDetailsReadMangaButton.setOnClickListener {
             viewModel.openChapters(arguments.mangaId)
+        }
+    }
+
+    private fun initRefresh(mangaId: String) {
+        binding.mangaDetailsSrl.setOnRefreshListener {
+            initData(mangaId)
         }
     }
 
@@ -49,10 +56,28 @@ class MangaDetailsFragment : Fragment(R.layout.fragment_manga_details) {
 
     private fun observeViewModel() {
         viewModel.mangaState.observe(this) {
-            when (it) {
-                is LoadState.Loading -> {}
-                is LoadState.Success -> initViews(it.data ?: MangaDetailsWithCover())
-                is LoadState.Error -> Log.d("TAG", "observeViewModel: ${it.message}")
+            with(binding) {
+                when (it) {
+                    is LoadState.Loading -> {
+                        mangaDetailsSrl.isRefreshing = true
+                    }
+                    is LoadState.Success -> {
+                        initViews(it.data ?: MangaDetailsWithCover())
+
+                        mangaDetailsSrl.isRefreshing = false
+                        mangaDetailsQueryError.root.isVisible = false
+                        mangaDetailsNotFound.root.isVisible = it.data == null
+
+                        mangaDetailsContentCl.isVisible = true
+                    }
+                    is LoadState.Error -> {
+                        mangaDetailsContentCl.isVisible = false
+                        mangaDetailsSrl.isRefreshing = false
+                        mangaDetailsNotFound.root.isVisible = false
+
+                        mangaDetailsQueryError.root.isVisible = true
+                    }
+                }
             }
         }
     }
@@ -62,28 +87,28 @@ class MangaDetailsFragment : Fragment(R.layout.fragment_manga_details) {
             if (manga.coverUrl.isNotEmpty()) {
                 Picasso.get()
                     .load(manga.coverUrl)
-                    .into(detailsCoverArtIv)
+                    .into(mangaDetailsCoverArtIv)
             }
-            detailsTitleTv.text = manga.title
-            detailsDescriptionTv.text = manga.description
+            mangaDetailsTitleTv.text = manga.title
+            mangaDetailsDescriptionTv.text = manga.description
 
-            if(detailsTagCg.size == 0) {
+            if(mangaDetailsTagCg.size == 0) {
                 manga.tags.map { tag ->
                     val chip = Chip(context)
                     chip.text = tag
-                    detailsTagCg.addView(chip)
+                    mangaDetailsTagCg.addView(chip)
                 }
             }
 
-            detailsStatusValueTv.text = manga.status
-            detailsContentRatingValueTv.text = manga.contentRating
+            mangaDetailsStatusValueTv.text = manga.status
+            mangaDetailsContentRatingValueTv.text = manga.contentRating
 
             if(manga.lastChapter != null) {
-                detailsLastChapterValueTv.text = manga.lastChapter
+                mangaDetailsLastChapterValueTv.text = manga.lastChapter
             } else {
-                diverBottom.isVisible = false
-                detailsLastChapterTv.isVisible = false
-                detailsLastChapterValueTv.isVisible = false
+                mangaDetailsDiverBottom.isVisible = false
+                mangaDetailsLastChapterTv.isVisible = false
+                mangaDetailsLastChapterValueTv.isVisible = false
             }
         }
     }

@@ -1,4 +1,4 @@
-package ru.vld43.mangadexapp.ui.details
+package ru.vld43.mangadexapp.ui.manga_details
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
