@@ -162,10 +162,12 @@ class MangaRepositoryImpl @Inject constructor(
     ): List<Chapter> = withContext(Dispatchers.IO) {
         val offset = pageSize * pageIndex
 
-        mangaDexApi.getChapters(mangaId, pageSize, offset)
-            .body()
-            ?.data
-            ?.map(ChapterMapper::map)
-            ?: emptyList()
+        val chaptersResponse = mangaDexApi.getChapters(mangaId, pageSize, offset).body()
+        if (chaptersResponse != null) {
+            ChaptersMapper.map(chaptersResponse)
+        } else {
+            emptyList()
+        }
+
     }
 }
