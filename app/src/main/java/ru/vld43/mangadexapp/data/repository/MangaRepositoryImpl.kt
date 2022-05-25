@@ -1,10 +1,10 @@
 package ru.vld43.mangadexapp.data.repository
 
-import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
@@ -23,7 +23,6 @@ import javax.inject.Inject
 
 private const val MANGA_PAGE_SIZE = 15
 private const val CHAPTERS_PAGE_SIZE = 20
-private const val CHAPTER_PAGES_PAGE_SIZE = 3
 
 private const val UNEXPECTED_ERROR_MESSAGE = "An unexpected error occurred"
 private const val INTERNET_CONNECTION_ERROR_MESSAGE =
@@ -49,17 +48,18 @@ class MangaRepositoryImpl @Inject constructor(
     }
 
     override fun searchPagingManga(title: String): Flow<PagingData<MangaWithCover>> {
-        val loader: MangaListPagerLoader = { pageSize, pageIndex ->
+        val loader: MangaListPagerLoader = { pageIndex, pageSize ->
             searchManga(
                 title = title,
-                pageSize = pageSize,
-                pageIndex = pageIndex
+                pageIndex = pageIndex,
+                pageSize = pageSize
             )
         }
 
         return Pager(
             config = PagingConfig(
                 pageSize = MANGA_PAGE_SIZE,
+                initialLoadSize = MANGA_PAGE_SIZE,
                 enablePlaceholders = false
             ),
             pagingSourceFactory = { MangaPagingSource(loader) }
@@ -124,8 +124,6 @@ class MangaRepositoryImpl @Inject constructor(
         withContext(Dispatchers.IO) {
             val offset = pageSize * pageIndex
 
-            Log.d("TAG", "getChapters: $pageSize | $offset")
-
             mangaDexApi.getMangaList(pageSize, offset)
                 .body()
                 ?.mangaList
@@ -144,6 +142,8 @@ class MangaRepositoryImpl @Inject constructor(
         title: String,
     ): List<MangaWithCover> = withContext(Dispatchers.IO) {
         val offset = pageSize * pageIndex
+
+        delay(300L)
 
         mangaDexApi.searchManga(title, pageSize, offset)
             .body()

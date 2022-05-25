@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import ru.vld43.mangadexapp.R
 import ru.vld43.mangadexapp.common.data.ui.DefaultLoadStateAdapter
 import ru.vld43.mangadexapp.common.extensions.observe
@@ -38,7 +37,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         initRefresh()
         initRecycler()
         initData()
-//        initSearchView()
+        initSearchView()
         observeViewModel()
     }
 
@@ -76,12 +75,11 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     }
 
     private fun initData() {
-//        if (binding.mangaSv.query.isNotEmpty()) {
-//            viewModel.searchManga(binding.mangaSv.query.toString())
-//        } else {
-//            viewModel.loadManga()
-//        }
-        viewModel.loadManga()
+        if (binding.mangaListSv.query.isNotEmpty()) {
+            viewModel.searchManga(binding.mangaListSv.query.toString())
+        } else {
+            viewModel.loadManga()
+        }
     }
 
     private fun observeViewModel() {
@@ -90,16 +88,16 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         }
     }
 
-//    private fun initSearchView() {
-//        binding.mangaListSv.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-//            override fun onQueryTextSubmit(query: String?): Boolean = false
-//
-//            override fun onQueryTextChange(newText: String): Boolean {
-//                viewModel.searchManga(newText)
-//                return false
-//            }
-//        })
-//    }
+    private fun initSearchView() {
+        binding.mangaListSv.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean = false
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                viewModel.searchManga(newText)
+                return false
+            }
+        })
+    }
 
     private fun listenLoadState() {
         mangaListAdapter.addLoadStateListener {
