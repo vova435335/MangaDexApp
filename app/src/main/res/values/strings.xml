@@ -7,12 +7,11 @@
     <string name="not_found">Ничего не найдено</string>
     <string name="search_hint">Search by manga name</string>
     <string name="alert_image_description">alert image</string>
-    <string name="paging_message_error">Oops, can\'t load data</string>
-    <string name="try_again_button">Try Again</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="content_rating">Content Rating:</string>
-    <string name="status">Status:</string>
-    <string name="last_chapter">Last Chapter:</string>
+    <string name="paging_message_error">К сожалению, не удалось получить данные</string>
+    <string name="try_again_button">Попробуйте ещё</string>
+    <string name="content_rating">Рейтинг контента:</string>
+    <string name="status">Статус:</string>
+    <string name="last_chapter">Последняя глава:</string>
     <string name="manga_details_description_tools">Последние слова, произнесённые Королем Пиратов Гол Д. Роджером перед казнью, вдохновили многих выйти в море: «Мои сокровища? Я завещаю их тому, кто сможет их найти. Ищите! Я все оставил в одном месте!». Лишённые сна и покоя люди ринулись на Гранд Лайн, самое опасное место в мире. Так началась великая эра пиратов… Но с каждым годом романтиков становилось все меньше, их постепенно вытесняли прагматичные пираты-разбойники, которым награбленное добро было куда ближе, чем какие-то «никчёмные мечты». Но вот, одним прекрасным днем, семнадцатилетний Монки Д. Луффи исполнил заветную мечту детства - отправился в море. Его цель — ни много, ни мало стать новым Королём Пиратов. За достаточно короткий срок юному капитану удаётся собрать команду, состоящую из не менее амбициозных искателей приключений. И пусть ими движут совершенно разные устремления, главное, этим ребятам важны не столько деньги и слава, сколько куда более ценное – принципы и верность друзьям. И ещё – служение Мечте. Что же, пока по Гранд Лайн плавают такие люди, Великая Эра Пиратов всегда будет с нами!</string>
-    <string name="read_button_text">Read</string>
+    <string name="read_button_text">Читать</string>
 </resources>

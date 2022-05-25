@@ -1,5 +1,6 @@
 package ru.vld43.mangadexapp.data.repository
 
+import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -124,6 +125,8 @@ class MangaRepositoryImpl @Inject constructor(
         withContext(Dispatchers.IO) {
             val offset = pageSize * pageIndex
 
+            Log.d("TAG", "getMangaList: $pageSize | $offset")
+
             mangaDexApi.getMangaList(pageSize, offset)
                 .body()
                 ?.mangaList
@@ -144,6 +147,8 @@ class MangaRepositoryImpl @Inject constructor(
         val offset = pageSize * pageIndex
 
         delay(300L)
+
+        Log.d("TAG", "searchManga: $pageSize | $offset")
 
         mangaDexApi.searchManga(title, pageSize, offset)
             .body()

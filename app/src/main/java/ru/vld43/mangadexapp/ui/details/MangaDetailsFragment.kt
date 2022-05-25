@@ -2,14 +2,15 @@ package ru.vld43.mangadexapp.ui.details
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import androidx.core.view.isVisible
+import androidx.core.view.size
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.chip.Chip
 import com.squareup.picasso.Picasso
+import ru.vld43.mangadexapp.R
 import ru.vld43.mangadexapp.common.extensions.observe
 import ru.vld43.mangadexapp.databinding.FragmentMangaDetailsBinding
 import ru.vld43.mangadexapp.domain.models.MangaDetailsWithCover
@@ -17,7 +18,7 @@ import ru.vld43.mangadexapp.ui.MainActivity
 import ru.vld43.mangadexapp.ui.states.LoadState
 import javax.inject.Inject
 
-class MangaDetailsFragment : Fragment() {
+class MangaDetailsFragment : Fragment(R.layout.fragment_manga_details) {
 
     private val arguments: MangaDetailsFragmentArgs by navArgs()
 
@@ -27,18 +28,12 @@ class MangaDetailsFragment : Fragment() {
 
     private lateinit var binding: FragmentMangaDetailsBinding
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        binding = FragmentMangaDetailsBinding.inflate(layoutInflater, container, false)
-        return binding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         MainActivity.appComponent.inject(this)
+
+        binding = FragmentMangaDetailsBinding.bind(view)
 
         observeViewModel()
         initData(arguments.mangaId)
@@ -71,14 +66,25 @@ class MangaDetailsFragment : Fragment() {
             }
             detailsTitleTv.text = manga.title
             detailsDescriptionTv.text = manga.description
-            manga.tags.map { tag ->
-                val chip = Chip(context)
-                chip.text = tag
-                detailsTagCg.addView(chip)
+
+            if(detailsTagCg.size == 0) {
+                manga.tags.map { tag ->
+                    val chip = Chip(context)
+                    chip.text = tag
+                    detailsTagCg.addView(chip)
+                }
             }
+
             detailsStatusValueTv.text = manga.status
             detailsContentRatingValueTv.text = manga.contentRating
-            detailsLastChapterValueTv.text = manga.lastChapter
+
+            if(manga.lastChapter != null) {
+                detailsLastChapterValueTv.text = manga.lastChapter
+            } else {
+                diverBottom.isVisible = false
+                detailsLastChapterTv.isVisible = false
+                detailsLastChapterValueTv.isVisible = false
+            }
         }
     }
 }
