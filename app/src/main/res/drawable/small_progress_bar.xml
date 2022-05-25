@@ -3,8 +3,8 @@
     <item>
         <shape android:shape="rectangle">
             <size
-                android:width="200dp"
-                android:height="200dp" />
+                android:width="80dp"
+                android:height="80dp" />
             <solid android:color="#00FFFFFF" />
         </shape>
     </item>
@@ -18,12 +18,12 @@
                 android:thicknessRatio="5.333"
                 android:useLevel="false">
                 <size
-                    android:width="180dip"
-                    android:height="180dip" />
+                    android:width="18dip"
+                    android:height="18dip" />
                 <gradient
-                    android:centerColor="#7025272B"
+                    android:centerColor="#886688cc"
                     android:centerY="0.50"
-                    android:endColor="#161617"
+                    android:endColor="#ff6688cc"
                     android:startColor="#006688cc"
                     android:type="sweep"
                     android:useLevel="false" />

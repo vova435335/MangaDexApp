@@ -34,7 +34,7 @@ class MangaAdapter(private val onClickListener: (String) -> Unit) :
         Picasso.get()
             .load(itemManga.coverUrl)
             .error(R.drawable.ic_not_cover)
-            .placeholder(R.drawable.progress_bar)
+            .placeholder(R.drawable.small_progress_bar)
             .into(holder.binding.mangaCoverIv)
 
         holder.binding.mangaTitleTv.text = itemManga.title

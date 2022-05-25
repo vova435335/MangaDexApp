@@ -3,6 +3,7 @@ package ru.vld43.mangadexapp.ui.read_manga
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
@@ -34,8 +35,15 @@ class ReadMangaFragment : Fragment(R.layout.fragment_read_manga) {
         binding = FragmentReadMangaBinding.bind(view)
 
         initRecycler()
+        initRefresh(arguments.chapterId)
         initData(arguments.chapterId)
         observeViewModel()
+    }
+
+    private fun initRefresh(chapterId: String) {
+        binding.readMangaSrl.setOnRefreshListener {
+            initData(chapterId)
+        }
     }
 
     private fun initRecycler() {
@@ -52,12 +60,33 @@ class ReadMangaFragment : Fragment(R.layout.fragment_read_manga) {
 
     private fun observeViewModel() {
         viewModel.chapterPagesState.observe(this) {
-            when (it) {
-                is LoadState.Loading -> {}
-                is LoadState.Success -> {
-                    readMangaAdapter.chapterPages = it.data ?: emptyList()
+            with(binding) {
+                when (it) {
+                    is LoadState.Loading -> {
+                        readMangaSrl.isRefreshing = true
+                        Log.d("TAG", "observeViewModel: LOADING")
+                    }
+                    is LoadState.Success -> {
+                        Log.d("TAG", "observeViewModel: SUCCESS")
+                        readMangaAdapter.chapterPages = it.data ?: emptyList()
+
+                        readMangaSrl.isRefreshing = false
+                        readMangaQueryError.root.isVisible = false
+                        readMangaNotFound.root.isVisible =
+                            readMangaAdapter.chapterPages.isEmpty()
+
+                        readMangaRv.isVisible = true
+
+                    }
+                    is LoadState.Error -> {
+                        Log.d("TAG", "observeViewModel: ERROR")
+                        readMangaRv.isVisible = false
+                        readMangaSrl.isRefreshing = false
+                        readMangaNotFound.root.isVisible = false
+
+                        readMangaQueryError.root.isVisible = true
+                    }
                 }
-                is LoadState.Error -> Log.d("TAG", "observeViewModel: ${it.message}")
             }
         }
     }
