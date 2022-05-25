@@ -9,9 +9,9 @@ import ru.vld43.mangadexapp.domain.models.MangaWithCover
 
 interface MangaRepository {
 
-    suspend fun getPagingMangaList(): Flow<PagingData<MangaWithCover>>
+    fun getPagingMangaList(): Flow<PagingData<MangaWithCover>>
 
-    suspend fun searchPagingManga(title: String): Flow<PagingData<MangaWithCover>>
+    fun searchPagingManga(title: String): Flow<PagingData<MangaWithCover>>
 
     fun getManga(mangaId: String): Flow<Result<MangaDetailsWithCover>>
 

@@ -9,8 +9,6 @@
     android:layout_marginBottom="8dp"
     android:background="?android:attr/selectableItemBackground"
     android:backgroundTint="@color/chapter_item_background"
-    android:clickable="true"
-    android:focusable="true"
     app:cardCornerRadius="10dp">
 
     <TextView

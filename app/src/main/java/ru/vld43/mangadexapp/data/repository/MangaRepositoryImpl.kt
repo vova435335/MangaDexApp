@@ -1,5 +1,6 @@
 package ru.vld43.mangadexapp.data.repository
 
+import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -32,9 +33,9 @@ class MangaRepositoryImpl @Inject constructor(
     private val mangaDexApi: MangaDexApi,
 ) : MangaRepository {
 
-    override suspend fun getPagingMangaList(): Flow<PagingData<MangaWithCover>> {
-        val loader: MangaListPagerLoader = { pageSize, pageIndex ->
-            getMangaList(pageSize, pageIndex)
+    override fun getPagingMangaList(): Flow<PagingData<MangaWithCover>> {
+        val loader: MangaListPagerLoader = { pageIndex, pageSize ->
+            getMangaList(pageIndex, pageSize)
         }
 
         return Pager(
@@ -47,7 +48,7 @@ class MangaRepositoryImpl @Inject constructor(
         ).flow
     }
 
-    override suspend fun searchPagingManga(title: String): Flow<PagingData<MangaWithCover>> {
+    override fun searchPagingManga(title: String): Flow<PagingData<MangaWithCover>> {
         val loader: MangaListPagerLoader = { pageSize, pageIndex ->
             searchManga(
                 title = title,
@@ -119,12 +120,13 @@ class MangaRepositoryImpl @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
 
-
-    private suspend fun getMangaList(pageSize: Int, pageIndex: Int): List<MangaWithCover> =
+    private suspend fun getMangaList(pageIndex: Int, pageSize: Int): List<MangaWithCover> =
         withContext(Dispatchers.IO) {
             val offset = pageSize * pageIndex
 
-            mangaDexApi.getMangaList(pageIndex, offset)
+            Log.d("TAG", "getChapters: $pageSize | $offset")
+
+            mangaDexApi.getMangaList(pageSize, offset)
                 .body()
                 ?.mangaList
                 ?.map {
@@ -168,6 +170,5 @@ class MangaRepositoryImpl @Inject constructor(
         } else {
             emptyList()
         }
-
     }
 }
