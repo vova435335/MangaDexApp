@@ -21,7 +21,7 @@ class ChaptersPagingSource(
         val pageSize = params.loadSize
 
         return try {
-            val chapters = loader(pageIndex, params.loadSize)
+            val chapters = loader(pageIndex, pageSize)
 
             return LoadResult.Page(
                 data = chapters,

@@ -12,7 +12,13 @@ object MangaWithCoverMapper {
     fun map(mangaResponse: MangaResponse, mangaCover: CoverArtResponse?): MangaWithCover {
 
             val id = mangaResponse.id ?: ""
-            val title = mangaResponse.attributes?.title?.en ?: UNTITLED
+            val title = mangaResponse.attributes?.run {
+                altTitles
+                    ?.mapNotNull { it.ru }
+                    ?.firstOrNull()
+                    ?: title?.en
+            } ?: UNTITLED
+
             val coverUrl = createCoverUrl(
                 id,
                 mangaCover?.data?.attributes?.fileName ?: ""

@@ -1,17 +1,16 @@
 package ru.vld43.mangadexapp.ui.main
 
 import android.os.Bundle
-import android.view.LayoutInflater
+import android.util.Log
 import android.view.View
-import android.view.ViewGroup
 import android.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
-import com.google.android.material.snackbar.Snackbar
 import ru.vld43.mangadexapp.R
+import ru.vld43.mangadexapp.common.data.ui.DefaultLoadStateAdapter
 import ru.vld43.mangadexapp.common.extensions.observe
 import ru.vld43.mangadexapp.databinding.FragmentMainBinding
 import ru.vld43.mangadexapp.ui.MainActivity
@@ -19,7 +18,7 @@ import javax.inject.Inject
 
 private const val SPAN_COUNT = 3
 
-class MainFragment : Fragment() {
+class MainFragment : Fragment(R.layout.fragment_main) {
 
     @Inject
     lateinit var viewModelFactory: MainViewModelFactory
@@ -27,66 +26,58 @@ class MainFragment : Fragment() {
 
     private lateinit var binding: FragmentMainBinding
 
-    private lateinit var mangaAdapter: MangaAdapter
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        binding = FragmentMainBinding.inflate(layoutInflater, container, false)
-        return binding.root
-    }
+    private lateinit var mangaListAdapter: MangaAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         MainActivity.appComponent.inject(this)
 
-        initViews()
+        binding = FragmentMainBinding.bind(view)
+
+        initRefresh()
         initRecycler()
         initData()
         initSearchView()
         observeViewModel()
     }
 
-    private fun initViews() {
-        binding.mangaSrl.setOnRefreshListener {
-            mangaAdapter.refresh()
+    private fun initRefresh() {
+        binding.mangaListSrl.setOnRefreshListener {
+            mangaListAdapter.refresh()
         }
     }
 
     private fun initRecycler() {
-        mangaAdapter = MangaAdapter(viewModel::openDetails)
-        binding.mangaListRv.adapter = mangaAdapter
-        binding.mangaListRv.layoutManager = GridLayoutManager(requireContext(), SPAN_COUNT)
-        mangaAdapter.addLoadStateListener {
+        mangaListAdapter = MangaAdapter(viewModel::openDetails)
 
-            when (it.refresh) {
-                LoadState.Loading -> {
-                    binding.mangaSrl.isRefreshing = true
-                    binding.queryErrorLayout.root.isVisible = false
-                }
-                is LoadState.Error -> {
-                    binding.mangaSrl.isRefreshing = false
+        val footerAdapter = DefaultLoadStateAdapter { mangaListAdapter.retry() }
+        val layoutManager = GridLayoutManager(requireContext(), SPAN_COUNT)
 
-                    binding.notFoundLayout.root.isVisible = false
-                    binding.queryErrorLayout.root.isVisible = true
+        binding.mangaListRv.apply {
+            this.layoutManager = layoutManager
 
-                    showSnackBar(getString(R.string.connection_error))
-                }
-                is LoadState.NotLoading -> {
-                    binding.queryErrorLayout.root.isVisible = false
-                    binding.mangaSrl.isRefreshing = false
+            adapter = mangaListAdapter.withLoadStateFooter(
+                footer = footerAdapter
+            )
 
-                    binding.notFoundLayout.root.isVisible = false
+            layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    return if (position == mangaListAdapter.itemCount && footerAdapter.itemCount > 0) {
+                        SPAN_COUNT
+                    } else {
+                        1
+                    }
                 }
             }
         }
+
+        listenLoadState()
     }
 
     private fun initData() {
-        if (binding.mangaSv.query.isNotEmpty()) {
-            viewModel.searchManga(binding.mangaSv.query.toString())
+        if (binding.mangaListSv.query.isNotEmpty()) {
+            viewModel.searchManga(binding.mangaListSv.query.toString())
         } else {
             viewModel.loadManga()
         }
@@ -94,12 +85,12 @@ class MainFragment : Fragment() {
 
     private fun observeViewModel() {
         viewModel.mangaListState.observe(this) {
-            mangaAdapter.submitData(lifecycle, it)
+            mangaListAdapter.submitData(lifecycle, it)
         }
     }
 
     private fun initSearchView() {
-        binding.mangaSv.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        binding.mangaListSv.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean = false
 
             override fun onQueryTextChange(newText: String): Boolean {
@@ -109,6 +100,29 @@ class MainFragment : Fragment() {
         })
     }
 
-    private fun showSnackBar(string: String) =
-        Snackbar.make(binding.root, string, Snackbar.LENGTH_SHORT).show()
+    private fun listenLoadState() {
+        mangaListAdapter.addLoadStateListener {
+            with(binding) {
+                when (it.refresh) {
+                    is LoadState.Loading -> {
+                        mangaListSrl.isRefreshing = true
+                    }
+                    is LoadState.Error -> {
+                        mangaListRv.isVisible = false
+                        mangaListSrl.isRefreshing = false
+                        mangaListNotFound.root.isVisible = false
+
+                        mangaListQueryError.root.isVisible = true
+                    }
+                    is LoadState.NotLoading -> {
+                        mangaListSrl.isRefreshing = false
+                        mangaListQueryError.root.isVisible = false
+                        mangaListNotFound.root.isVisible = mangaListAdapter.itemCount == 0
+
+                        mangaListRv.isVisible = true
+                    }
+                }
+            }
+        }
+    }
 }

@@ -2,7 +2,7 @@ package ru.vld43.mangadexapp.ui.navigation
 
 import androidx.navigation.NavController
 import ru.vld43.mangadexapp.ui.chapters.ChaptersFragmentDirections
-import ru.vld43.mangadexapp.ui.details.MangaDetailsFragmentDirections
+import ru.vld43.mangadexapp.ui.manga_details.MangaDetailsFragmentDirections
 import ru.vld43.mangadexapp.ui.main.MainFragmentDirections
 import javax.inject.Inject
 

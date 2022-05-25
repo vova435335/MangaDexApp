@@ -45,6 +45,7 @@ interface MangaDexApi {
         @Query(QUERY_SEARCH_KEY_PARAMETER) title: String,
         @Query(QUERY_LIMIT_KEY) limit: Int,
         @Query(QUERY_OFFSET_KEY) offset: Int,
+        @Query("availableTranslatedLanguage[]") language: String = "ru",
     ): Response<MangaListResponse>
 
     @GET(GET_CHAPTERS)

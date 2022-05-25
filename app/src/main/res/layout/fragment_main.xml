@@ -7,16 +7,17 @@
     tools:context=".ui.main.MainFragment">
 
     <SearchView
-        android:id="@+id/manga_sv"
+        android:id="@+id/manga_list_sv"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginVertical="8dp"
         android:background="@drawable/shape_search_view_background"
         android:closeIcon="@drawable/ic_close"
         android:iconifiedByDefault="false"
         android:queryBackground="@android:color/transparent"
         android:searchIcon="@drawable/ic_search"
+        app:layout_constraintBottom_toTopOf="@id/manga_list_srl"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -24,44 +25,38 @@
         app:showAsAction="always" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/manga_srl"
+        android:id="@+id/manga_list_srl"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginHorizontal="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/manga_sv">
+        app:layout_constraintTop_toBottomOf="@id/manga_list_sv">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/manga_list_rv"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/manga_list_rv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="8dp"
-                android:clipToPadding="false"
-                android:paddingBottom="16dp"
-                tools:itemCount="20"
-                tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                tools:listitem="@layout/item_manga"
-                tools:orientation="vertical"
-                tools:spanCount="3" />
-
-        </LinearLayout>
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:clipToPadding="false"
+            android:paddingTop="8dp"
+            android:paddingBottom="16dp"
+            tools:itemCount="20"
+            tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            tools:listitem="@layout/item_manga"
+            tools:orientation="vertical"
+            tools:spanCount="3" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <include
-        android:id="@+id/query_error_layout"
+        android:id="@+id/manga_list_query_error"
         layout="@layout/layout_query_error"
         android:visibility="gone" />
 
     <include
-        android:id="@+id/not_found_layout"
+        android:id="@+id/manga_list_not_found"
         layout="@layout/layout_not_found"
         android:visibility="gone" />
 </androidx.constraintlayout.widget.ConstraintLayout>

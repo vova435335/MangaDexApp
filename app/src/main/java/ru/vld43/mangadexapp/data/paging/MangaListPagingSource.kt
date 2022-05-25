@@ -4,9 +4,9 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import ru.vld43.mangadexapp.domain.models.MangaWithCover
 
-typealias MangaListPagerLoader = suspend (pageSize: Int, pageIndex: Int) -> List<MangaWithCover>
+typealias MangaListPagerLoader = suspend (pageIndex: Int, pageSize: Int) -> List<MangaWithCover>
 
-class MangaPagingSource (
+class MangaPagingSource(
     private val loader: MangaListPagerLoader,
 ) : PagingSource<Int, MangaWithCover>() {
 
@@ -18,14 +18,15 @@ class MangaPagingSource (
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MangaWithCover> {
         val pageIndex = params.key ?: 0
+        val pageSize = params.loadSize
 
         return try {
-            val mangaList = loader(pageIndex, params.loadSize)
+            val mangaList = loader(pageIndex, pageSize)
 
             return LoadResult.Page(
                 data = mangaList,
                 prevKey = if (pageIndex == 0) null else pageIndex - 1,
-                nextKey = pageIndex + 1
+                nextKey = if (mangaList.size < pageSize) null else pageIndex + 1
             )
         } catch (e: Exception) {
             LoadResult.Error(throwable = e)

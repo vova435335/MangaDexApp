@@ -1,165 +1,197 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/manga_details_srl"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:scrollbars="none"
-    tools:context=".ui.details.MangaDetailsFragment">
+    tools:context=".ui.manga_details.MangaDetailsFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
+        android:id="@+id/manga_details_sv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:scrollbars="none">
 
-        <ImageView
-            android:id="@+id/details_cover_art_iv"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="600dp"
-            android:contentDescription="@string/manga_cover_art_content_description"
-            android:scaleType="centerCrop"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:src="@tools:sample/avatars" />
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/details_title_tv"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginVertical="16sp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:textColor="@color/black"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/details_description_tv"
-            app:layout_constraintEnd_toStartOf="@+id/read_manga_button"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/details_cover_art_iv"
-            tools:text="One Piece" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/manga_details_content_cl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent">
 
-        <Button
-            android:id="@+id/read_manga_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:text="@string/read_button_text"
-            app:layout_constraintBottom_toBottomOf="@id/details_title_tv"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/details_title_tv" />
+                <ImageView
+                    android:id="@+id/manga_details_cover_art_iv"
+                    android:layout_width="match_parent"
+                    android:layout_height="600dp"
+                    android:contentDescription="@string/manga_cover_art_content_description"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:src="@tools:sample/avatars" />
 
-        <TextView
-            android:id="@+id/details_description_tv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="16dp"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toTopOf="@+id/details_tag_cg"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/details_title_tv"
-            tools:text="@string/manga_details_description_tools" />
+                <TextView
+                    android:id="@+id/manga_details_title_tv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginVertical="16sp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:textColor="@color/black"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/manga_details_description_tv"
+                    app:layout_constraintEnd_toStartOf="@+id/manga_details_read_manga_button"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/manga_details_cover_art_iv"
+                    tools:text="One Piece" />
 
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/details_tag_cg"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginVertical="16dp"
-            app:layout_constraintBottom_toTopOf="@+id/details_status_tv"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/details_description_tv" />
+                <Button
+                    android:id="@+id/manga_details_read_manga_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:backgroundTint="@color/black"
+                    android:text="@string/read_button_text"
+                    app:layout_constraintBottom_toBottomOf="@id/manga_details_title_tv"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/manga_details_title_tv" />
 
-        <TextView
-            android:id="@+id/details_status_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:text="@string/status"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/diver_top"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/details_tag_cg" />
+                <TextView
+                    android:id="@+id/manga_details_description_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="16dp"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toTopOf="@+id/manga_details_tag_cg"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/manga_details_title_tv"
+                    tools:text="@string/manga_details_description_tools" />
 
-        <TextView
-            android:id="@+id/details_status_value_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/details_status_tv"
-            app:layout_constraintStart_toEndOf="@+id/details_status_tv"
-            app:layout_constraintTop_toTopOf="@+id/details_status_tv"
-            tools:text="ongoing" />
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/manga_details_tag_cg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginVertical="16dp"
+                    app:layout_constraintBottom_toTopOf="@+id/manga_details_status_tv"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/manga_details_description_tv" />
 
-        <View
-            android:id="@+id/diver_top"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginVertical="16dp"
-            android:background="@android:color/darker_gray"
-            app:layout_constraintBottom_toTopOf="@+id/details_content_rating_tv"
-            app:layout_constraintTop_toBottomOf="@+id/details_status_tv" />
+                <TextView
+                    android:id="@+id/manga_details_status_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginBottom="4dp"
+                    android:text="@string/status"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/manga_details_diver_top"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/manga_details_tag_cg" />
 
-        <TextView
-            android:id="@+id/details_content_rating_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:text="@string/content_rating"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/diver_bottom"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/diver_top" />
+                <TextView
+                    android:id="@+id/manga_details_status_value_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/manga_details_status_tv"
+                    app:layout_constraintStart_toEndOf="@+id/manga_details_status_tv"
+                    app:layout_constraintTop_toTopOf="@+id/manga_details_status_tv"
+                    tools:text="ongoing" />
 
-        <TextView
-            android:id="@+id/details_content_rating_value_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/details_content_rating_tv"
-            app:layout_constraintStart_toEndOf="@+id/details_content_rating_tv"
-            app:layout_constraintTop_toTopOf="@+id/details_content_rating_tv"
-            tools:text="safe" />
+                <View
+                    android:id="@+id/manga_details_diver_top"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginVertical="16dp"
+                    android:background="@android:color/darker_gray"
+                    app:layout_constraintBottom_toTopOf="@+id/manga_details_content_rating_tv"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/manga_details_status_tv" />
 
-        <View
-            android:id="@+id/diver_bottom"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginVertical="16dp"
-            android:background="@android:color/darker_gray"
-            app:layout_constraintBottom_toTopOf="@+id/details_last_chapter_tv"
-            app:layout_constraintTop_toBottomOf="@+id/details_content_rating_tv" />
+                <TextView
+                    android:id="@+id/manga_details_content_rating_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="@string/content_rating"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/manga_details_diver_bottom"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/manga_details_diver_top" />
 
-        <TextView
-            android:id="@+id/details_last_chapter_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginBottom="16dp"
-            android:text="@string/last_chapter"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/diver_bottom" />
+                <TextView
+                    android:id="@+id/manga_details_content_rating_value_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/manga_details_content_rating_tv"
+                    app:layout_constraintStart_toEndOf="@+id/manga_details_content_rating_tv"
+                    app:layout_constraintTop_toTopOf="@+id/manga_details_content_rating_tv"
+                    tools:text="safe" />
 
-        <TextView
-            android:id="@+id/details_last_chapter_value_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/details_last_chapter_tv"
-            app:layout_constraintStart_toEndOf="@+id/details_last_chapter_tv"
-            app:layout_constraintTop_toTopOf="@+id/details_last_chapter_tv"
-            tools:text="40" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+                <View
+                    android:id="@+id/manga_details_diver_bottom"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="@android:color/darker_gray"
+                    app:layout_constraintBottom_toTopOf="@+id/manga_details_last_chapter_tv"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/manga_details_content_rating_tv" />
+
+                <TextView
+                    android:id="@+id/manga_details_last_chapter_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="@string/last_chapter"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/manga_details_diver_bottom" />
+
+                <TextView
+                    android:id="@+id/manga_details_last_chapter_value_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/manga_details_last_chapter_tv"
+                    app:layout_constraintStart_toEndOf="@+id/manga_details_last_chapter_tv"
+                    app:layout_constraintTop_toTopOf="@+id/manga_details_last_chapter_tv"
+                    tools:text="40" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <include
+                android:id="@+id/manga_details_query_error"
+                layout="@layout/layout_query_error"
+                android:visibility="gone" />
+
+            <include
+                android:id="@+id/manga_details_not_found"
+                layout="@layout/layout_not_found"
+                android:visibility="gone" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

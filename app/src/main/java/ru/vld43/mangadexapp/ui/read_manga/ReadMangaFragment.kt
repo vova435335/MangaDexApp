@@ -64,10 +64,8 @@ class ReadMangaFragment : Fragment(R.layout.fragment_read_manga) {
                 when (it) {
                     is LoadState.Loading -> {
                         readMangaSrl.isRefreshing = true
-                        Log.d("TAG", "observeViewModel: LOADING")
                     }
                     is LoadState.Success -> {
-                        Log.d("TAG", "observeViewModel: SUCCESS")
                         readMangaAdapter.chapterPages = it.data ?: emptyList()
 
                         readMangaSrl.isRefreshing = false
@@ -79,7 +77,6 @@ class ReadMangaFragment : Fragment(R.layout.fragment_read_manga) {
 
                     }
                     is LoadState.Error -> {
-                        Log.d("TAG", "observeViewModel: ERROR")
                         readMangaRv.isVisible = false
                         readMangaSrl.isRefreshing = false
                         readMangaNotFound.root.isVisible = false
