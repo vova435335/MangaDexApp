@@ -4,17 +4,13 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import ru.vld43.mangadexapp.common.data.extansions.map
 import ru.vld43.mangadexapp.common.data.extansions.toResult
 import ru.vld43.mangadexapp.common.data.models.Result
-import ru.vld43.mangadexapp.data.paging.ChaptersPageLoader
-import ru.vld43.mangadexapp.data.paging.ChaptersPagingSource
-import ru.vld43.mangadexapp.data.paging.MangaListPagerLoader
-import ru.vld43.mangadexapp.data.paging.MangaPagingSource
+import ru.vld43.mangadexapp.data.paging.*
 import ru.vld43.mangadexapp.data.remote.MangaDexApi
 import ru.vld43.mangadexapp.data.remote.response.mappers.*
 import ru.vld43.mangadexapp.domain.models.Chapter
@@ -26,6 +22,7 @@ import javax.inject.Inject
 
 private const val MANGA_PAGE_SIZE = 15
 private const val CHAPTERS_PAGE_SIZE = 20
+private const val CHAPTER_PAGES_PAGE_SIZE = 3
 
 private const val UNEXPECTED_ERROR_MESSAGE = "An unexpected error occurred"
 private const val INTERNET_CONNECTION_ERROR_MESSAGE =
@@ -89,7 +86,7 @@ class MangaRepositoryImpl @Inject constructor(
         } catch (e: IOException) {
             emit(Result.Error(INTERNET_CONNECTION_ERROR_MESSAGE))
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
     override fun getPagingChapters(mangaId: String): Flow<PagingData<Chapter>> {
         val loader: ChaptersPageLoader = { pageIndex, pageSize ->
@@ -105,6 +102,23 @@ class MangaRepositoryImpl @Inject constructor(
             pagingSourceFactory = { ChaptersPagingSource(loader) }
         ).flow
     }
+
+    override fun getChapterPages(chapterId: String): Flow<Result<List<String>>> = flow {
+        try {
+            when (val chapterPages = mangaDexApi.getChapterPages(chapterId).toResult()) {
+                is Result.Success -> {
+                    val domainModel = chapterPages.map(ifSuccess = { ChapterPagesMapper.map(it) })
+                    emit(domainModel)
+                }
+                else -> emit(chapterPages.map(ifError = { UNEXPECTED_ERROR_MESSAGE }))
+            }
+        } catch (e: HttpException) {
+            emit(Result.Error(e.localizedMessage ?: UNEXPECTED_ERROR_MESSAGE))
+        } catch (e: IOException) {
+            emit(Result.Error(INTERNET_CONNECTION_ERROR_MESSAGE))
+        }
+    }.flowOn(Dispatchers.IO)
+
 
     private suspend fun getMangaList(pageSize: Int, pageIndex: Int): List<MangaWithCover> =
         withContext(Dispatchers.IO) {
@@ -151,8 +165,7 @@ class MangaRepositoryImpl @Inject constructor(
         mangaDexApi.getChapters(mangaId, pageSize, offset)
             .body()
             ?.data
-            ?.map {
-                ChapterMapper.map(it)
-            } ?: emptyList()
+            ?.map(ChapterMapper::map)
+            ?: emptyList()
     }
 }

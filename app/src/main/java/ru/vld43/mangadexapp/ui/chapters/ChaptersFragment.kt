@@ -9,9 +9,9 @@ import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import ru.vld43.mangadexapp.R
+import ru.vld43.mangadexapp.common.data.ui.DefaultLoadStateAdapter
 import ru.vld43.mangadexapp.common.extensions.observe
 import ru.vld43.mangadexapp.databinding.FragmentChaptersBinding
-import ru.vld43.mangadexapp.ui.DefaultLoadStateAdapter
 import ru.vld43.mangadexapp.ui.MainActivity
 import javax.inject.Inject
 
@@ -47,7 +47,7 @@ class ChaptersFragment : Fragment(R.layout.fragment_chapters) {
     }
 
     private fun initRecycler() {
-        chaptersAdapter = ChaptersAdapter()
+        chaptersAdapter = ChaptersAdapter(viewModel::openReadManga)
         binding.chaptersRv.apply {
             layoutManager = LinearLayoutManager(requireContext())
 
@@ -71,23 +71,25 @@ class ChaptersFragment : Fragment(R.layout.fragment_chapters) {
 
     private fun listenLoadState() {
         chaptersAdapter.addLoadStateListener {
-            when (it.refresh) {
-                is LoadState.Loading -> {
-                    binding.chapterSrl.isRefreshing = true
-                }
-                is LoadState.Error -> {
-                    binding.chaptersRv.isVisible = false
-                    binding.chapterSrl.isRefreshing = false
-                    binding.chaptersNotFound.root.isVisible = false
+            with(binding) {
+                when (it.refresh) {
+                    is LoadState.Loading -> {
+                        chapterSrl.isRefreshing = true
+                    }
+                    is LoadState.Error -> {
+                        chaptersRv.isVisible = false
+                        chapterSrl.isRefreshing = false
+                        chaptersNotFound.root.isVisible = false
 
-                    binding.chaptersQueryError.root.isVisible = true
-                }
-                is LoadState.NotLoading -> {
-                    binding.chapterSrl.isRefreshing = false
-                    binding.chaptersQueryError.root.isVisible = false
-                    binding.chaptersNotFound.root.isVisible = chaptersAdapter.itemCount == 0
+                        chaptersQueryError.root.isVisible = true
+                    }
+                    is LoadState.NotLoading -> {
+                        chapterSrl.isRefreshing = false
+                        chaptersQueryError.root.isVisible = false
+                        chaptersNotFound.root.isVisible = chaptersAdapter.itemCount == 0
 
-                    binding.chaptersRv.isVisible = true
+                        chaptersRv.isVisible = true
+                    }
                 }
             }
         }

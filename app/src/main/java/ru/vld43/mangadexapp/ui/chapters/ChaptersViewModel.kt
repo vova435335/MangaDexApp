@@ -28,4 +28,8 @@ class ChaptersViewModel(
                 .collect(mutableChaptersState::emit)
         }
     }
+
+    fun openReadManga(chapterId: String) {
+        appNavigator.navigateToReadManga(chapterId)
+    }
 }

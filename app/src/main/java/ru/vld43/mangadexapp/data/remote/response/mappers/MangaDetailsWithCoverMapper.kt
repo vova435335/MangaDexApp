@@ -1,6 +1,6 @@
 package ru.vld43.mangadexapp.data.remote.response.mappers
 
-import ru.vld43.mangadexapp.common.Constants
+import ru.vld43.mangadexapp.common.data.UrlConstants
 import ru.vld43.mangadexapp.data.remote.response.cover_art.CoverArtResponse
 import ru.vld43.mangadexapp.data.remote.response.manga.MangaByIdResponse
 import ru.vld43.mangadexapp.domain.models.MangaDetailsWithCover
@@ -36,5 +36,5 @@ object MangaDetailsWithCoverMapper {
     }
 
     private fun createCoverUrl(mangaId: String, coverFileName: String) =
-        "${Constants.COVER_ART_URL}/$mangaId/$coverFileName$IMAGE_SIZE"
+        "${UrlConstants.COVER_ART_URL}/$mangaId/$coverFileName$IMAGE_SIZE"
 }

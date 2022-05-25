@@ -31,13 +31,11 @@ class MangaAdapter(private val onClickListener: (String) -> Unit) :
     override fun onBindViewHolder(holder: MangaViewHolder, position: Int) {
         val itemManga = getItem(position) ?: return
 
-        if (itemManga.coverUrl != "") {
-            Picasso.get()
-                .load(itemManga.coverUrl)
-                .into(holder.binding.mangaCoverIv)
-        } else {
-            holder.binding.mangaCoverIv.setImageResource(R.drawable.ic_not_cover)
-        }
+        Picasso.get()
+            .load(itemManga.coverUrl)
+            .error(R.drawable.ic_not_cover)
+            .placeholder(R.drawable.small_progress_bar)
+            .into(holder.binding.mangaCoverIv)
 
         holder.binding.mangaTitleTv.text = itemManga.title
 

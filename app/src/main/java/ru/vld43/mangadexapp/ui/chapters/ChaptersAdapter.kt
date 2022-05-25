@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.vld43.mangadexapp.databinding.ItemChapterBinding
 import ru.vld43.mangadexapp.domain.models.Chapter
 
-class ChaptersAdapter :
+class ChaptersAdapter(private val onClickListener: (String) -> Unit) :
     PagingDataAdapter<Chapter, ChaptersAdapter.ChapterViewHolder>(ChapterItemCallBack) {
 
     object ChapterItemCallBack : DiffUtil.ItemCallback<Chapter>() {
@@ -24,6 +24,11 @@ class ChaptersAdapter :
         val itemChapter = getItem(position) ?: return
 
         holder.binding.chapterTitleTv.text = itemChapter.title
+
+        holder.binding.root.setOnClickListener {
+            onClickListener(itemChapter.id)
+        }
+
     }
 
     override fun onCreateViewHolder(

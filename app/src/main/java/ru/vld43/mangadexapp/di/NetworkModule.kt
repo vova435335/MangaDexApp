@@ -6,7 +6,7 @@ import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import ru.vld43.mangadexapp.common.Constants
+import ru.vld43.mangadexapp.common.data.UrlConstants
 import ru.vld43.mangadexapp.data.remote.MangaDexApi
 import ru.vld43.mangadexapp.data.remote.deserialize.LocalizedStringDeserializer
 import ru.vld43.mangadexapp.data.remote.response.manga.LocalizedString
@@ -25,7 +25,7 @@ class NetworkModule {
     @Singleton
     @Provides
     fun provideRetrofit(gson: Gson): Retrofit = Retrofit.Builder()
-        .baseUrl(Constants.BASE_URL)
+        .baseUrl(UrlConstants.BASE_URL)
         .addConverterFactory(GsonConverterFactory.create(gson))
         .build()
 
