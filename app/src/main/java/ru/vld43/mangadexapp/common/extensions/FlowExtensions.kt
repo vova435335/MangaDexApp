@@ -10,6 +10,6 @@ import kotlinx.coroutines.flow.onEach
 
 fun <T> Flow<T>.observe(lifecycleOwner: LifecycleOwner, action: suspend (value: T) -> Unit) {
     onEach(action)
-        .flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+        .flowWithLifecycle(lifecycleOwner.lifecycle)
         .launchIn(lifecycleOwner.lifecycle.coroutineScope)
 }
