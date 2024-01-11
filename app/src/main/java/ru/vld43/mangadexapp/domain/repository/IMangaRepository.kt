@@ -7,13 +7,28 @@ import ru.vld43.mangadexapp.domain.models.MangaWithCover
 
 interface IMangaRepository {
 
-    suspend fun getMangaList(pageIndex: Int, pageSize: Int): List<MangaWithCover>
+    suspend fun getMangaList(
+        pageIndex: Int,
+        pageSize: Int
+    ): ApiResult<List<MangaWithCover>>
 
-    suspend fun searchManga(pageSize: Int, pageIndex: Int, title: String): List<MangaWithCover>
+    suspend fun searchManga(
+        pageSize: Int,
+        pageIndex: Int,
+        title: String
+    ): ApiResult<List<MangaWithCover>>
 
-    suspend fun getManga(mangaId: String): ApiResult<MangaDetailsWithCover>
+    suspend fun getManga(
+        mangaId: String
+    ): ApiResult<MangaDetailsWithCover>
 
-    suspend fun getChapters(pageIndex: Int, pageSize: Int, mangaId: String): List<Chapter>
+    suspend fun getChapters(
+        pageIndex: Int,
+        pageSize: Int,
+        mangaId: String
+    ): ApiResult<List<Chapter>>
 
-    suspend fun getChapterPages(chapterId: String): ApiResult<List<String>>
+    suspend fun getChapterPages(
+        chapterId: String
+    ): ApiResult<List<String>>
 }

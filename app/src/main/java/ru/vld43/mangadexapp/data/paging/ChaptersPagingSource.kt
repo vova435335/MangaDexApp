@@ -2,12 +2,14 @@ package ru.vld43.mangadexapp.data.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import ru.vld43.mangadexapp.common.data.ApiError
+import ru.vld43.mangadexapp.common.data.ApiException
+import ru.vld43.mangadexapp.common.data.ApiResult
+import ru.vld43.mangadexapp.common.data.ApiSuccess
 import ru.vld43.mangadexapp.domain.models.Chapter
 
-typealias ChaptersPageLoader = suspend (pageIndex: Int, pageSize: Int) -> List<Chapter>
-
 class ChaptersPagingSource(
-    private val loader: ChaptersPageLoader,
+    private val loader: suspend (pageIndex: Int, pageSize: Int) -> ApiResult<List<Chapter>>,
 ) : PagingSource<Int, Chapter>() {
 
     override fun getRefreshKey(state: PagingState<Int, Chapter>): Int? {
@@ -20,16 +22,23 @@ class ChaptersPagingSource(
         val pageIndex = params.key ?: 0
         val pageSize = params.loadSize
 
-        return try {
-            val chapters = loader(pageIndex, pageSize)
+        return when(val chapters = loader(pageIndex, pageSize)) {
+            is ApiSuccess -> {
+                LoadResult.Page(
+                    data = chapters.data,
+                    prevKey = if (pageIndex == 0) null else pageIndex - 1,
+                    nextKey = if(chapters.data.size < pageSize) null else pageIndex + 1
+                )
+            }
 
-            return LoadResult.Page(
-                data = chapters,
-                prevKey = if (pageIndex == 0) null else pageIndex - 1,
-                nextKey = if(chapters.size < pageSize) null else pageIndex + 1
-            )
-        } catch (e: Exception) {
-            LoadResult.Error(throwable = e)
+            is ApiError -> {
+                // todo обработать по кодам оштбки
+                LoadResult.Error(RuntimeException())
+            }
+
+            is ApiException -> {
+                LoadResult.Error(chapters.e)
+            }
         }
     }
 }

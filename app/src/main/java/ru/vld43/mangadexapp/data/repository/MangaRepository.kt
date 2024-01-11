@@ -8,6 +8,8 @@ import ru.vld43.mangadexapp.common.data.ApiSuccess
 import ru.vld43.mangadexapp.common.data.handleApi
 import ru.vld43.mangadexapp.common.data.map
 import ru.vld43.mangadexapp.data.network.MangaDexApi
+import ru.vld43.mangadexapp.data.network.response.manga.Manga
+import ru.vld43.mangadexapp.data.network.response.manga.MangaList
 import ru.vld43.mangadexapp.data.network.response.mappers.ChapterPagesMapper
 import ru.vld43.mangadexapp.data.network.response.mappers.ChaptersMapper
 import ru.vld43.mangadexapp.data.network.response.mappers.MangaByIdToMangaCoverIdMapper
@@ -29,41 +31,67 @@ class MangaRepository @Inject constructor(
     private val mangaToMangaCoverIdMapper: MangaToMangaCoverIdMapper,
     private val mangaWithCoverMapper: MangaWithCoverMapper
 ) : IMangaRepository {
-    override suspend fun getMangaList(pageIndex: Int, pageSize: Int): List<MangaWithCover> =
+    override suspend fun getMangaList(
+        pageIndex: Int,
+        pageSize: Int
+    ): ApiResult<List<MangaWithCover>> =
         withContext(Dispatchers.IO) {
             val offset = pageSize * pageIndex
 
-            mangaDexApi.getMangaList(pageSize, offset)
-                .body()
-                ?.mangaList
-                ?.map {
-                    val mangaCover = mangaDexApi.getCoverArt(
-                        mangaToMangaCoverIdMapper.map(it)
-                    ).body()
+            handleApi { mangaDexApi.getMangaList(pageSize, offset) }
+                .map { data: MangaList ->
+                    data.mangaList.map { manga: Manga ->
+                        val mangaCover = handleApi {
+                            mangaDexApi.getCoverArt(
+                                mangaToMangaCoverIdMapper.map(manga)
+                            )
+                        }
 
-                    mangaWithCoverMapper.map(it, mangaCover)
-                } ?: emptyList()
+                        if (mangaCover is ApiSuccess) {
+                            mangaWithCoverMapper.map(
+                                manga = manga,
+                                mangaCover = mangaCover.data
+                            )
+                        } else {
+                            mangaWithCoverMapper.map(
+                                manga = manga,
+                                mangaCover = null
+                            )
+                        }
+                    }
+                }
         }
 
     override suspend fun searchManga(
         pageSize: Int,
         pageIndex: Int,
         title: String
-    ): List<MangaWithCover> = withContext(Dispatchers.IO) {
+    ): ApiResult<List<MangaWithCover>> = withContext(Dispatchers.IO) {
         val offset = pageSize * pageIndex
-
         delay(300L)
 
-        mangaDexApi.searchManga(title, pageSize, offset)
-            .body()
-            ?.mangaList
-            ?.map {
-                val mangaCover = mangaDexApi.getCoverArt(
-                    mangaToMangaCoverIdMapper.map(it)
-                ).body()
+        handleApi { mangaDexApi.searchManga(title, pageSize, offset) }
+            .map { data: MangaList ->
+                data.mangaList.map { manga: Manga ->
+                    val mangaCover = handleApi {
+                        mangaDexApi.getCoverArt(
+                            mangaToMangaCoverIdMapper.map(manga)
+                        )
+                    }
 
-                mangaWithCoverMapper.map(it, mangaCover)
-            } ?: emptyList()
+                    if (mangaCover is ApiSuccess) {
+                        mangaWithCoverMapper.map(
+                            manga = manga,
+                            mangaCover = mangaCover.data
+                        )
+                    } else {
+                        mangaWithCoverMapper.map(
+                            manga = manga,
+                            mangaCover = null
+                        )
+                    }
+                }
+            }
     }
 
     override suspend fun getManga(mangaId: String): ApiResult<MangaDetailsWithCover> =
@@ -94,15 +122,11 @@ class MangaRepository @Inject constructor(
         pageIndex: Int,
         pageSize: Int,
         mangaId: String
-    ): List<Chapter> = withContext(Dispatchers.IO) {
+    ): ApiResult<List<Chapter>> = withContext(Dispatchers.IO) {
         val offset = pageSize * pageIndex
 
-        val chaptersResponse = mangaDexApi.getChapters(mangaId, pageSize, offset).body()
-        if (chaptersResponse != null) {
-            chaptersMapper.map(chaptersResponse)
-        } else {
-            emptyList()
-        }
+        handleApi { mangaDexApi.getChapters(mangaId, pageSize, pageIndex) }
+            .map(chaptersMapper::map)
     }
 
     override suspend fun getChapterPages(chapterId: String): ApiResult<List<String>> =
