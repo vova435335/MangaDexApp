@@ -6,15 +6,25 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import ru.vld43.mangadexapp.common.data.extansions.map
 import ru.vld43.mangadexapp.common.data.extansions.toResult
 import ru.vld43.mangadexapp.common.data.models.Result
-import ru.vld43.mangadexapp.data.paging.*
+import ru.vld43.mangadexapp.data.paging.ChaptersPageLoader
+import ru.vld43.mangadexapp.data.paging.ChaptersPagingSource
+import ru.vld43.mangadexapp.data.paging.MangaListPagerLoader
+import ru.vld43.mangadexapp.data.paging.MangaPagingSource
 import ru.vld43.mangadexapp.data.remote.MangaDexApi
-import ru.vld43.mangadexapp.data.remote.response.mappers.*
+import ru.vld43.mangadexapp.data.remote.response.mappers.ChapterPagesMapper
+import ru.vld43.mangadexapp.data.remote.response.mappers.ChaptersMapper
+import ru.vld43.mangadexapp.data.remote.response.mappers.MangaByIdToMangaCoverIdMapper
+import ru.vld43.mangadexapp.data.remote.response.mappers.MangaDetailsWithCoverMapper
+import ru.vld43.mangadexapp.data.remote.response.mappers.MangaToMangaCoverIdMapper
+import ru.vld43.mangadexapp.data.remote.response.mappers.MangaWithCoverMapper
 import ru.vld43.mangadexapp.domain.models.Chapter
 import ru.vld43.mangadexapp.domain.models.MangaDetailsWithCover
 import ru.vld43.mangadexapp.domain.models.MangaWithCover
@@ -31,6 +41,12 @@ private const val INTERNET_CONNECTION_ERROR_MESSAGE =
 
 class MangaRepositoryImpl @Inject constructor(
     private val mangaDexApi: MangaDexApi,
+    private val chapterPagesMapper: ChapterPagesMapper,
+    private val chaptersMapper: ChaptersMapper,
+    private val mangaByIdToMangaCoverIdMapper: MangaByIdToMangaCoverIdMapper,
+    private val mangaDetailsWithCoverMapper: MangaDetailsWithCoverMapper,
+    private val mangaToMangaCoverIdMapper: MangaToMangaCoverIdMapper,
+    private val mangaWithCoverMapper: MangaWithCoverMapper
 ) : MangaRepository {
 
     override fun getPagingMangaList(): Flow<PagingData<MangaWithCover>> {
@@ -72,15 +88,16 @@ class MangaRepositoryImpl @Inject constructor(
             when (val manga = mangaDexApi.getManga(mangaId).toResult()) {
                 is Result.Success -> {
                     val mangaCover = mangaDexApi.getCoverArt(
-                        MangaByIdDtoToMangaCoverIdMapper.map(manga.data)
+                        mangaByIdToMangaCoverIdMapper.map(manga.data)
                     ).body()
 
                     val domainModel = manga.map(ifSuccess = {
-                        MangaDetailsWithCoverMapper.map(manga.data, mangaCover)
+                        mangaDetailsWithCoverMapper.map(manga.data, mangaCover)
                     })
 
                     emit(domainModel)
                 }
+
                 else -> emit(manga.map(ifError = { UNEXPECTED_ERROR_MESSAGE }))
             }
         } catch (e: HttpException) {
@@ -109,9 +126,10 @@ class MangaRepositoryImpl @Inject constructor(
         try {
             when (val chapterPages = mangaDexApi.getChapterPages(chapterId).toResult()) {
                 is Result.Success -> {
-                    val domainModel = chapterPages.map(ifSuccess = { ChapterPagesMapper.map(it) })
+                    val domainModel = chapterPages.map(ifSuccess = { chapterPagesMapper.map(it) })
                     emit(domainModel)
                 }
+
                 else -> emit(chapterPages.map(ifError = { UNEXPECTED_ERROR_MESSAGE }))
             }
         } catch (e: HttpException) {
@@ -132,10 +150,10 @@ class MangaRepositoryImpl @Inject constructor(
                 ?.mangaList
                 ?.map {
                     val mangaCover = mangaDexApi.getCoverArt(
-                        MangaDtoToMangaCoverIdMapper.map(it)
+                        mangaToMangaCoverIdMapper.map(it)
                     ).body()
 
-                    MangaWithCoverMapper.map(it, mangaCover)
+                    mangaWithCoverMapper.map(it, mangaCover)
                 } ?: emptyList()
         }
 
@@ -155,10 +173,10 @@ class MangaRepositoryImpl @Inject constructor(
             ?.mangaList
             ?.map {
                 val mangaCover = mangaDexApi.getCoverArt(
-                    MangaDtoToMangaCoverIdMapper.map(it)
+                    mangaToMangaCoverIdMapper.map(it)
                 ).body()
 
-                MangaWithCoverMapper.map(it, mangaCover)
+                mangaWithCoverMapper.map(it, mangaCover)
             } ?: emptyList()
     }
 
@@ -171,7 +189,7 @@ class MangaRepositoryImpl @Inject constructor(
 
         val chaptersResponse = mangaDexApi.getChapters(mangaId, pageSize, offset).body()
         if (chaptersResponse != null) {
-            ChaptersMapper.map(chaptersResponse)
+            chaptersMapper.map(chaptersResponse)
         } else {
             emptyList()
         }

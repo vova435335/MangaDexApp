@@ -4,18 +4,18 @@ import ru.vld43.mangadexapp.common.data.UrlConstants
 import ru.vld43.mangadexapp.data.remote.response.cover_art.CoverArt
 import ru.vld43.mangadexapp.data.remote.response.manga.Manga
 import ru.vld43.mangadexapp.domain.models.MangaWithCover
+import javax.inject.Inject
 
 private const val UNTITLED = "untitled"
 
-object MangaWithCoverMapper {
+class MangaWithCoverMapper @Inject constructor() {
 
     fun map(manga: Manga, mangaCover: CoverArt?): MangaWithCover {
 
             val id = manga.id ?: ""
             val title = manga.attributes?.run {
                 altTitles
-                    ?.mapNotNull { it.ru }
-                    ?.firstOrNull()
+                    ?.firstNotNullOfOrNull { it.ru }
                     ?: title?.en
             } ?: UNTITLED
 

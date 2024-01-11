@@ -2,15 +2,16 @@ package ru.vld43.mangadexapp.data.remote.response.mappers
 
 import ru.vld43.mangadexapp.data.remote.response.chapters.Chapters
 import ru.vld43.mangadexapp.domain.models.Chapter
+import javax.inject.Inject
 
 private const val CHAPTER = "Глава"
 
-object ChaptersMapper {
+class ChaptersMapper @Inject constructor() {
 
     fun map(chapters: Chapters): List<Chapter> {
-        val chapters = chapters.data
+        val result = chapters.data
 
-        return chapters?.map {
+        return result?.map {
             val numberChapter = it.chapterAttributes?.chapter ?: ""
             val title = it.chapterAttributes?.title ?: ""
 
