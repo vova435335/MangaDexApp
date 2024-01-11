@@ -15,11 +15,11 @@ import ru.vld43.mangadexapp.common.data.UrlConstants.QUERY_CHAPTERS_MANGA_ID_KEY
 import ru.vld43.mangadexapp.common.data.UrlConstants.QUERY_OFFSET_KEY
 import ru.vld43.mangadexapp.common.data.UrlConstants.QUERY_SEARCH_KEY_PARAMETER
 import ru.vld43.mangadexapp.common.data.UrlConstants.SEARCH_MANGA
-import ru.vld43.mangadexapp.data.remote.response.chapter_pages.ChapterPagesResponse
-import ru.vld43.mangadexapp.data.remote.response.chapters.ChaptersResponse
-import ru.vld43.mangadexapp.data.remote.response.cover_art.CoverArtResponse
-import ru.vld43.mangadexapp.data.remote.response.manga.MangaByIdResponse
-import ru.vld43.mangadexapp.data.remote.response.manga.MangaListResponse
+import ru.vld43.mangadexapp.data.remote.response.chapter_pages.ChapterPages
+import ru.vld43.mangadexapp.data.remote.response.chapters.Chapters
+import ru.vld43.mangadexapp.data.remote.response.cover_art.CoverArt
+import ru.vld43.mangadexapp.data.remote.response.manga.MangaById
+import ru.vld43.mangadexapp.data.remote.response.manga.MangaList
 
 interface MangaDexApi {
 
@@ -28,17 +28,17 @@ interface MangaDexApi {
         @Query(QUERY_LIMIT_KEY) limit: Int,
         @Query(QUERY_OFFSET_KEY) offset: Int,
         @Query("availableTranslatedLanguage[]") language: String = "ru",
-    ): Response<MangaListResponse>
+    ): Response<MangaList>
 
     @GET(GET_MANGA)
     suspend fun getManga(
         @Path("id") id: String,
-    ): Response<MangaByIdResponse>
+    ): Response<MangaById>
 
     @GET(GET_COVER_ART)
     suspend fun getCoverArt(
         @Path("id") id: String,
-    ): Response<CoverArtResponse>
+    ): Response<CoverArt>
 
     @GET(SEARCH_MANGA)
     suspend fun searchManga(
@@ -46,7 +46,7 @@ interface MangaDexApi {
         @Query(QUERY_LIMIT_KEY) limit: Int,
         @Query(QUERY_OFFSET_KEY) offset: Int,
         @Query("availableTranslatedLanguage[]") language: String = "ru",
-    ): Response<MangaListResponse>
+    ): Response<MangaList>
 
     @GET(GET_CHAPTERS)
     suspend fun getChapters(
@@ -54,10 +54,10 @@ interface MangaDexApi {
         @Query(QUERY_LIMIT_KEY) limit: Int,
         @Query(QUERY_OFFSET_KEY) offset: Int,
         @Query(QUERY_CHAPTERS_LANGUAGE_KEY) language: String = "ru",
-    ): Response<ChaptersResponse>
+    ): Response<Chapters>
 
     @GET(GET_CHAPTER_PAGES)
     suspend fun getChapterPages(
         @Path("id") id: String,
-    ): Response<ChapterPagesResponse>
+    ): Response<ChapterPages>
 }

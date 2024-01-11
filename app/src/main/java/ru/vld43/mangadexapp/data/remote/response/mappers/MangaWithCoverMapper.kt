@@ -1,18 +1,18 @@
 package ru.vld43.mangadexapp.data.remote.response.mappers
 
 import ru.vld43.mangadexapp.common.data.UrlConstants
-import ru.vld43.mangadexapp.data.remote.response.cover_art.CoverArtResponse
-import ru.vld43.mangadexapp.data.remote.response.manga.MangaResponse
+import ru.vld43.mangadexapp.data.remote.response.cover_art.CoverArt
+import ru.vld43.mangadexapp.data.remote.response.manga.Manga
 import ru.vld43.mangadexapp.domain.models.MangaWithCover
 
 private const val UNTITLED = "untitled"
 
 object MangaWithCoverMapper {
 
-    fun map(mangaResponse: MangaResponse, mangaCover: CoverArtResponse?): MangaWithCover {
+    fun map(manga: Manga, mangaCover: CoverArt?): MangaWithCover {
 
-            val id = mangaResponse.id ?: ""
-            val title = mangaResponse.attributes?.run {
+            val id = manga.id ?: ""
+            val title = manga.attributes?.run {
                 altTitles
                     ?.mapNotNull { it.ru }
                     ?.firstOrNull()

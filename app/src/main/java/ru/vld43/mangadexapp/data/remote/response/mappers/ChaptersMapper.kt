@@ -1,14 +1,14 @@
 package ru.vld43.mangadexapp.data.remote.response.mappers
 
-import ru.vld43.mangadexapp.data.remote.response.chapters.ChaptersResponse
+import ru.vld43.mangadexapp.data.remote.response.chapters.Chapters
 import ru.vld43.mangadexapp.domain.models.Chapter
 
 private const val CHAPTER = "Глава"
 
 object ChaptersMapper {
 
-    fun map(chaptersResponse: ChaptersResponse): List<Chapter> {
-        val chapters = chaptersResponse.data
+    fun map(chapters: Chapters): List<Chapter> {
+        val chapters = chapters.data
 
         return chapters?.map {
             val numberChapter = it.chapterAttributes?.chapter ?: ""

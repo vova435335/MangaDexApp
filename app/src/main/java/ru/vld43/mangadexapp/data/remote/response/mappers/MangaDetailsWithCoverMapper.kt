@@ -1,9 +1,8 @@
 package ru.vld43.mangadexapp.data.remote.response.mappers
 
-import android.util.Log
 import ru.vld43.mangadexapp.common.data.UrlConstants
-import ru.vld43.mangadexapp.data.remote.response.cover_art.CoverArtResponse
-import ru.vld43.mangadexapp.data.remote.response.manga.MangaByIdResponse
+import ru.vld43.mangadexapp.data.remote.response.cover_art.CoverArt
+import ru.vld43.mangadexapp.data.remote.response.manga.MangaById
 import ru.vld43.mangadexapp.domain.models.MangaDetailsWithCover
 
 private const val NONE = "none"
@@ -13,7 +12,7 @@ const val IMAGE_SIZE = ".512.jpg"
 
 object MangaDetailsWithCoverMapper {
 
-    fun map(mangaResponse: MangaByIdResponse, mangaCover: CoverArtResponse?): MangaDetailsWithCover {
+    fun map(mangaResponse: MangaById, mangaCover: CoverArt?): MangaDetailsWithCover {
         val id = mangaResponse.manga?.id ?: ""
         val title = mangaResponse.manga?.attributes?.run {
             altTitles
