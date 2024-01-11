@@ -2,9 +2,6 @@ package ru.vld43.mangadexapp.data.repository
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import ru.vld43.mangadexapp.common.data.extansions.map
@@ -74,29 +71,30 @@ class MangaRepository @Inject constructor(
             } ?: emptyList()
     }
 
-    override fun getManga(mangaId: String): Flow<Result<MangaDetailsWithCover>> = flow {
-        try {
-            when (val manga = mangaDexApi.getManga(mangaId).toResult()) {
-                is Result.Success -> {
-                    val mangaCover = mangaDexApi.getCoverArt(
-                        mangaByIdToMangaCoverIdMapper.map(manga.data)
-                    ).body()
+    override suspend fun getManga(mangaId: String): Result<MangaDetailsWithCover> =
+        withContext(Dispatchers.IO) {
+            try {
+                when (val manga = mangaDexApi.getManga(mangaId).toResult()) {
+                    is Result.Success -> {
+                        val mangaCover = mangaDexApi.getCoverArt(
+                            mangaByIdToMangaCoverIdMapper.map(manga.data)
+                        ).body()
 
-                    val domainModel = manga.map(ifSuccess = {
-                        mangaDetailsWithCoverMapper.map(manga.data, mangaCover)
-                    })
+                        val domainModel = manga.map(ifSuccess = {
+                            mangaDetailsWithCoverMapper.map(manga.data, mangaCover)
+                        })
 
-                    emit(domainModel)
+                        domainModel
+                    }
+
+                    else -> manga.map(ifError = { UNEXPECTED_ERROR_MESSAGE })
                 }
-
-                else -> emit(manga.map(ifError = { UNEXPECTED_ERROR_MESSAGE }))
+            } catch (e: HttpException) {
+                Result.Error(e.localizedMessage ?: UNEXPECTED_ERROR_MESSAGE)
+            } catch (e: IOException) {
+                Result.Error(INTERNET_CONNECTION_ERROR_MESSAGE)
             }
-        } catch (e: HttpException) {
-            emit(Result.Error(e.localizedMessage ?: UNEXPECTED_ERROR_MESSAGE))
-        } catch (e: IOException) {
-            emit(Result.Error(INTERNET_CONNECTION_ERROR_MESSAGE))
         }
-    }.flowOn(Dispatchers.IO)
 
     override suspend fun getChapters(
         pageIndex: Int,
@@ -113,20 +111,24 @@ class MangaRepository @Inject constructor(
         }
     }
 
-    override fun getChapterPages(chapterId: String): Flow<Result<List<String>>> = flow {
-        try {
-            when (val chapterPages = mangaDexApi.getChapterPages(chapterId).toResult()) {
-                is Result.Success -> {
-                    val domainModel = chapterPages.map(ifSuccess = { chapterPagesMapper.map(it) })
-                    emit(domainModel)
-                }
+    override suspend fun getChapterPages(chapterId: String): Result<List<String>> =
+        withContext(Dispatchers.IO) {
+            try {
+                when (val chapterPages = mangaDexApi.getChapterPages(chapterId).toResult()) {
+                    is Result.Success -> {
+                        val domainModel =
+                            chapterPages.map(ifSuccess = { chapterPagesMapper.map(it) })
+                        domainModel
+                    }
 
-                else -> emit(chapterPages.map(ifError = { UNEXPECTED_ERROR_MESSAGE }))
+                    else -> {
+                        chapterPages.map(ifError = { UNEXPECTED_ERROR_MESSAGE })
+                    }
+                }
+            } catch (e: HttpException) {
+                Result.Error(e.localizedMessage ?: UNEXPECTED_ERROR_MESSAGE)
+            } catch (e: IOException) {
+                Result.Error(INTERNET_CONNECTION_ERROR_MESSAGE)
             }
-        } catch (e: HttpException) {
-            emit(Result.Error(e.localizedMessage ?: UNEXPECTED_ERROR_MESSAGE))
-        } catch (e: IOException) {
-            emit(Result.Error(INTERNET_CONNECTION_ERROR_MESSAGE))
         }
-    }.flowOn(Dispatchers.IO)
 }

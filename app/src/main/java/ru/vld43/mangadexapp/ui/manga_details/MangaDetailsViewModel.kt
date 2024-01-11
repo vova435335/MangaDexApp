@@ -17,20 +17,19 @@ class MangaDetailsViewModel(
 ) : ViewModel() {
 
     val mangaState: StateFlow<LoadState<MangaDetailsWithCover>>
-        get() = mutableMangaState
+        get() = _mangaState
 
-    private val mutableMangaState =
+    private val _mangaState =
         MutableStateFlow<LoadState<MangaDetailsWithCover>>(LoadState.Loading())
 
     fun loadManga(mangaId: String) {
         viewModelScope.launch {
-            getMangaUseCase(mangaId)
-                .collect {
-                    when (it) {
-                        is Result.Success -> mutableMangaState.emit(LoadState.Success(it.data))
-                        is Result.Error -> mutableMangaState.emit(LoadState.Error(it.error))
-                    }
-                }
+            _mangaState.emit(LoadState.Loading())
+
+            when (val result = getMangaUseCase(mangaId)) {
+                is Result.Success -> _mangaState.emit(LoadState.Success(result.data))
+                is Result.Error -> _mangaState.emit(LoadState.Error(result.error))
+            }
         }
     }
 

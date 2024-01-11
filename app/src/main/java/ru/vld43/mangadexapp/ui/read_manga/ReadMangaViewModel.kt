@@ -14,22 +14,19 @@ class ReadMangaViewModel(
 ) : ViewModel() {
 
     val chapterPagesState: StateFlow<LoadState<List<String>>>
-        get() = mutableChapterPagesState
+        get() = _chapterPagesState
 
-    private val mutableChapterPagesState =
+    private val _chapterPagesState =
         MutableStateFlow<LoadState<List<String>>>(LoadState.Loading())
 
     fun loadChapterPages(mangaId: String) {
         viewModelScope.launch {
-            getChapterPagesUseCase(mangaId)
-                .collect {
-                    when (it) {
-                        is Result.Success -> {
-                            mutableChapterPagesState.emit(LoadState.Success(it.data))
-                        }
-                        is Result.Error -> mutableChapterPagesState.emit(LoadState.Error(it.error))
-                    }
-                }
+            _chapterPagesState.emit(LoadState.Loading())
+
+            when (val result = getChapterPagesUseCase(mangaId)) {
+                is Result.Success -> _chapterPagesState.emit(LoadState.Success(result.data))
+                is Result.Error -> _chapterPagesState.emit(LoadState.Error(result.error))
+            }
         }
     }
 }
