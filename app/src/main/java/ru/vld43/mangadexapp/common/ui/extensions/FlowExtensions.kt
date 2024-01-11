@@ -1,6 +1,5 @@
 package ru.vld43.mangadexapp.common.ui.extensions
 
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.flowWithLifecycle

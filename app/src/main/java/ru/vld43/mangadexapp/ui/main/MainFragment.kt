@@ -1,7 +1,6 @@
 package ru.vld43.mangadexapp.ui.main
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.SearchView
 import androidx.core.view.isVisible
