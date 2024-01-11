@@ -1,7 +1,6 @@
 package ru.vld43.mangadexapp.ui.read_manga
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -9,7 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import ru.vld43.mangadexapp.R
-import ru.vld43.mangadexapp.common.extensions.observe
+import ru.vld43.mangadexapp.common.ui.extensions.observe
 import ru.vld43.mangadexapp.databinding.FragmentReadMangaBinding
 import ru.vld43.mangadexapp.ui.MainActivity
 import ru.vld43.mangadexapp.ui.states.LoadState

@@ -2,8 +2,8 @@ package ru.vld43.mangadexapp.di
 
 import dagger.Binds
 import dagger.Module
-import ru.vld43.mangadexapp.data.repository.MangaRepositoryImpl
-import ru.vld43.mangadexapp.domain.repository.MangaRepository
+import ru.vld43.mangadexapp.data.repository.MangaRepository
+import ru.vld43.mangadexapp.domain.repository.IMangaRepository
 import javax.inject.Singleton
 
 @Module
@@ -12,7 +12,6 @@ interface DataBindModule {
     @Singleton
     @Binds
     fun bindMangaRepository(
-        mangaRepositoryImpl: MangaRepositoryImpl
-    ): MangaRepository
-
+        mangaRepository: MangaRepository
+    ): IMangaRepository
 }

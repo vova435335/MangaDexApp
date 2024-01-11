@@ -2,7 +2,7 @@ package ru.vld43.mangadexapp.ui.read_manga
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import ru.vld43.mangadexapp.domain.use_cases.GetChapterPagesUseCase
+import ru.vld43.mangadexapp.domain.use_case.GetChapterPagesUseCase
 import javax.inject.Inject
 
 class ReadMangaViewModelFactory @Inject constructor(
