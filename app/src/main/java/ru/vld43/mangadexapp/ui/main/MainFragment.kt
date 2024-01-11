@@ -10,8 +10,8 @@ import androidx.fragment.app.viewModels
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import ru.vld43.mangadexapp.R
-import ru.vld43.mangadexapp.common.data.ui.DefaultLoadStateAdapter
-import ru.vld43.mangadexapp.common.extensions.observe
+import ru.vld43.mangadexapp.common.ui.DefaultLoadStateAdapter
+import ru.vld43.mangadexapp.common.ui.extensions.observe
 import ru.vld43.mangadexapp.databinding.FragmentMainBinding
 import ru.vld43.mangadexapp.ui.MainActivity
 import javax.inject.Inject

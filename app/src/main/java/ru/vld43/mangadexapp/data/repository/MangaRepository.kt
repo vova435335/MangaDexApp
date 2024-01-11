@@ -3,27 +3,22 @@ package ru.vld43.mangadexapp.data.repository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
-import retrofit2.HttpException
-import ru.vld43.mangadexapp.common.data.extansions.map
-import ru.vld43.mangadexapp.common.data.extansions.toResult
-import ru.vld43.mangadexapp.common.data.models.Result
-import ru.vld43.mangadexapp.data.remote.MangaDexApi
-import ru.vld43.mangadexapp.data.remote.response.mappers.ChapterPagesMapper
-import ru.vld43.mangadexapp.data.remote.response.mappers.ChaptersMapper
-import ru.vld43.mangadexapp.data.remote.response.mappers.MangaByIdToMangaCoverIdMapper
-import ru.vld43.mangadexapp.data.remote.response.mappers.MangaDetailsWithCoverMapper
-import ru.vld43.mangadexapp.data.remote.response.mappers.MangaToMangaCoverIdMapper
-import ru.vld43.mangadexapp.data.remote.response.mappers.MangaWithCoverMapper
+import ru.vld43.mangadexapp.common.data.ApiResult
+import ru.vld43.mangadexapp.common.data.ApiSuccess
+import ru.vld43.mangadexapp.common.data.handleApi
+import ru.vld43.mangadexapp.common.data.map
+import ru.vld43.mangadexapp.data.network.MangaDexApi
+import ru.vld43.mangadexapp.data.network.response.mappers.ChapterPagesMapper
+import ru.vld43.mangadexapp.data.network.response.mappers.ChaptersMapper
+import ru.vld43.mangadexapp.data.network.response.mappers.MangaByIdToMangaCoverIdMapper
+import ru.vld43.mangadexapp.data.network.response.mappers.MangaDetailsWithCoverMapper
+import ru.vld43.mangadexapp.data.network.response.mappers.MangaToMangaCoverIdMapper
+import ru.vld43.mangadexapp.data.network.response.mappers.MangaWithCoverMapper
 import ru.vld43.mangadexapp.domain.models.Chapter
 import ru.vld43.mangadexapp.domain.models.MangaDetailsWithCover
 import ru.vld43.mangadexapp.domain.models.MangaWithCover
 import ru.vld43.mangadexapp.domain.repository.IMangaRepository
-import java.io.IOException
 import javax.inject.Inject
-
-private const val UNEXPECTED_ERROR_MESSAGE = "An unexpected error occurred"
-private const val INTERNET_CONNECTION_ERROR_MESSAGE =
-    "Couldn't reach server. Check your internet connection."
 
 class MangaRepository @Inject constructor(
     private val mangaDexApi: MangaDexApi,
@@ -71,29 +66,28 @@ class MangaRepository @Inject constructor(
             } ?: emptyList()
     }
 
-    override suspend fun getManga(mangaId: String): Result<MangaDetailsWithCover> =
+    override suspend fun getManga(mangaId: String): ApiResult<MangaDetailsWithCover> =
         withContext(Dispatchers.IO) {
-            try {
-                when (val manga = mangaDexApi.getManga(mangaId).toResult()) {
-                    is Result.Success -> {
-                        val mangaCover = mangaDexApi.getCoverArt(
-                            mangaByIdToMangaCoverIdMapper.map(manga.data)
-                        ).body()
-
-                        val domainModel = manga.map(ifSuccess = {
-                            mangaDetailsWithCoverMapper.map(manga.data, mangaCover)
-                        })
-
-                        domainModel
+            handleApi { mangaDexApi.getManga(mangaId) }
+                .map { manga ->
+                    val mangaCover = handleApi {
+                        mangaDexApi.getCoverArt(
+                            mangaByIdToMangaCoverIdMapper.map(manga)
+                        )
                     }
 
-                    else -> manga.map(ifError = { UNEXPECTED_ERROR_MESSAGE })
+                    if (mangaCover is ApiSuccess) {
+                        mangaDetailsWithCoverMapper.map(
+                            mangaResponse = manga,
+                            mangaCover = mangaCover.data
+                        )
+                    } else {
+                        mangaDetailsWithCoverMapper.map(
+                            mangaResponse = manga,
+                            mangaCover = null
+                        )
+                    }
                 }
-            } catch (e: HttpException) {
-                Result.Error(e.localizedMessage ?: UNEXPECTED_ERROR_MESSAGE)
-            } catch (e: IOException) {
-                Result.Error(INTERNET_CONNECTION_ERROR_MESSAGE)
-            }
         }
 
     override suspend fun getChapters(
@@ -111,24 +105,9 @@ class MangaRepository @Inject constructor(
         }
     }
 
-    override suspend fun getChapterPages(chapterId: String): Result<List<String>> =
+    override suspend fun getChapterPages(chapterId: String): ApiResult<List<String>> =
         withContext(Dispatchers.IO) {
-            try {
-                when (val chapterPages = mangaDexApi.getChapterPages(chapterId).toResult()) {
-                    is Result.Success -> {
-                        val domainModel =
-                            chapterPages.map(ifSuccess = { chapterPagesMapper.map(it) })
-                        domainModel
-                    }
-
-                    else -> {
-                        chapterPages.map(ifError = { UNEXPECTED_ERROR_MESSAGE })
-                    }
-                }
-            } catch (e: HttpException) {
-                Result.Error(e.localizedMessage ?: UNEXPECTED_ERROR_MESSAGE)
-            } catch (e: IOException) {
-                Result.Error(INTERNET_CONNECTION_ERROR_MESSAGE)
-            }
+            handleApi { mangaDexApi.getChapterPages(chapterId) }
+                .map(chapterPagesMapper::map)
         }
 }

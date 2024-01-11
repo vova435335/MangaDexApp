@@ -7,9 +7,9 @@ import dagger.Provides
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.vld43.mangadexapp.common.data.UrlConstants
-import ru.vld43.mangadexapp.data.remote.MangaDexApi
-import ru.vld43.mangadexapp.data.remote.deserialize.LocalizedStringDeserializer
-import ru.vld43.mangadexapp.data.remote.response.manga.LocalizedString
+import ru.vld43.mangadexapp.data.network.MangaDexApi
+import ru.vld43.mangadexapp.data.network.deserialize.LocalizedStringDeserializer
+import ru.vld43.mangadexapp.data.network.response.manga.LocalizedString
 import javax.inject.Singleton
 
 @Module

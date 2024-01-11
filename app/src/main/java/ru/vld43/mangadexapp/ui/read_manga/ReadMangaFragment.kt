@@ -9,7 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import ru.vld43.mangadexapp.R
-import ru.vld43.mangadexapp.common.extensions.observe
+import ru.vld43.mangadexapp.common.ui.extensions.observe
 import ru.vld43.mangadexapp.databinding.FragmentReadMangaBinding
 import ru.vld43.mangadexapp.ui.MainActivity
 import ru.vld43.mangadexapp.ui.states.LoadState

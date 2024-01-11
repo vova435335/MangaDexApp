@@ -11,7 +11,7 @@ import androidx.navigation.fragment.navArgs
 import com.google.android.material.chip.Chip
 import com.squareup.picasso.Picasso
 import ru.vld43.mangadexapp.R
-import ru.vld43.mangadexapp.common.extensions.observe
+import ru.vld43.mangadexapp.common.ui.extensions.observe
 import ru.vld43.mangadexapp.databinding.FragmentMangaDetailsBinding
 import ru.vld43.mangadexapp.domain.models.MangaDetailsWithCover
 import ru.vld43.mangadexapp.ui.MainActivity
