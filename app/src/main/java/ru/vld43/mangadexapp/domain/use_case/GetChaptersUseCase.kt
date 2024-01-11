@@ -5,7 +5,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import ru.vld43.mangadexapp.data.paging.ChaptersPagingSource
-import ru.vld43.mangadexapp.domain.common.use_case.CHAPTERS_PAGE_SIZE
+import ru.vld43.mangadexapp.common.domain.use_case.CHAPTERS_PAGE_SIZE
 import ru.vld43.mangadexapp.domain.models.Chapter
 import ru.vld43.mangadexapp.domain.repository.IMangaRepository
 import javax.inject.Inject

@@ -1,6 +1,6 @@
 package ru.vld43.mangadexapp.data.network.response.mappers
 
-import ru.vld43.mangadexapp.common.data.UrlConstants
+import ru.vld43.mangadexapp.common.data.COVER_ART_URL
 import ru.vld43.mangadexapp.data.network.response.cover_art.CoverArt
 import ru.vld43.mangadexapp.data.network.response.manga.Manga
 import ru.vld43.mangadexapp.domain.models.MangaWithCover
@@ -32,5 +32,5 @@ class MangaWithCoverMapper @Inject constructor() {
     }
 
     private fun createCoverUrl(mangaId: String, coverFileName: String) =
-        "${UrlConstants.COVER_ART_URL}/$mangaId/$coverFileName$IMAGE_SIZE"
+        "${COVER_ART_URL}/$mangaId/$coverFileName$IMAGE_SIZE"
 }

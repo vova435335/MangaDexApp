@@ -68,8 +68,8 @@ class MangaRepository @Inject constructor(
         title: String
     ): ApiResult<List<MangaWithCover>> = withContext(Dispatchers.IO) {
         val offset = pageSize * pageIndex
-        delay(300L)
 
+        delay(300L)
         handleApi { mangaDexApi.searchManga(title, pageSize, offset) }
             .map { data: MangaList ->
                 data.mangaList.map { manga: Manga ->

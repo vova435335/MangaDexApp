@@ -32,7 +32,7 @@ class MangaPagingSource(
             }
 
             is ApiError -> {
-                // todo обработать по кодам оштбки
+                // todo обработать по кодам оштбки, может быть создать маппер
                 LoadResult.Error(RuntimeException())
             }
 
