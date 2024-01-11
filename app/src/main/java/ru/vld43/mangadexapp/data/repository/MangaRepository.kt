@@ -125,7 +125,7 @@ class MangaRepository @Inject constructor(
     ): ApiResult<List<Chapter>> = withContext(Dispatchers.IO) {
         val offset = pageSize * pageIndex
 
-        handleApi { mangaDexApi.getChapters(mangaId, pageSize, pageIndex) }
+        handleApi { mangaDexApi.getChapters(mangaId, pageSize, offset) }
             .map(chaptersMapper::map)
     }
 
