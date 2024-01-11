@@ -4,10 +4,8 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import ru.vld43.mangadexapp.domain.models.MangaWithCover
 
-typealias MangaListPagerLoader = suspend (pageIndex: Int, pageSize: Int) -> List<MangaWithCover>
-
 class MangaPagingSource(
-    private val loader: MangaListPagerLoader,
+    private val loader: suspend (pageIndex: Int, pageSize: Int) -> List<MangaWithCover>,
 ) : PagingSource<Int, MangaWithCover>() {
 
     override fun getRefreshKey(state: PagingState<Int, MangaWithCover>): Int? {

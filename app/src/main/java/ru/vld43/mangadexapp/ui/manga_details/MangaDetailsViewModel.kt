@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import ru.vld43.mangadexapp.common.data.models.Result
 import ru.vld43.mangadexapp.domain.models.MangaDetailsWithCover
-import ru.vld43.mangadexapp.domain.use_cases.GetMangaUseCase
+import ru.vld43.mangadexapp.domain.use_case.GetMangaUseCase
 import ru.vld43.mangadexapp.ui.navigation.AppNavigator
 import ru.vld43.mangadexapp.ui.states.LoadState
 

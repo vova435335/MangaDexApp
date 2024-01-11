@@ -2,7 +2,7 @@ package ru.vld43.mangadexapp.ui.chapters
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import ru.vld43.mangadexapp.domain.use_cases.GetChaptersUseCase
+import ru.vld43.mangadexapp.domain.use_case.GetChaptersUseCase
 import ru.vld43.mangadexapp.ui.navigation.AppNavigator
 import javax.inject.Inject
 

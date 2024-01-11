@@ -1,12 +1,12 @@
-package ru.vld43.mangadexapp.domain.use_cases
+package ru.vld43.mangadexapp.domain.use_case
 
 import kotlinx.coroutines.flow.Flow
 import ru.vld43.mangadexapp.common.data.models.Result
-import ru.vld43.mangadexapp.domain.repository.MangaRepository
+import ru.vld43.mangadexapp.domain.repository.IMangaRepository
 import javax.inject.Inject
 
 class GetChapterPagesUseCase @Inject constructor(
-    private val mangaRepository: MangaRepository,
+    private val mangaRepository: IMangaRepository,
 ) {
 
     operator fun invoke(chapterId: String): Flow<Result<List<String>>> =
